@@ -1,0 +1,45 @@
+.. |sys_010| image:: ../_static/sys/sys_010.png
+    :height: 450
+    :width: 552
+    :target: ../_static/sys/sys_010_full.png
+
+.. |sys_020| image:: ../_static/sys/sys_020.png
+    :height: 175
+    :width: 175
+    :target: https://fr.bosch-automotive.com/en/parts_and_accessories/engine_systems_1/gasoline_1/hot_film_air_mass_meters_1/hot_film_air_mass_meters_6
+
+.. |sys_030| image:: ../_static/sys/sys_030.png
+    :height: 200
+    :width: 200
+    :target: https://www.kistler.com/en/applications/automotive-research-test/engine-research-development/combustion-analysis-cylinder-pressure-testing/
+
+.. |sys_040| image:: ../_static/sys/sys_040.png
+    :height: 148
+    :width: 700
+
+.. |sys_050| image:: ../_static/sys/sys_050.png
+    :height: 153
+    :width: 700
+
+.. |sys_060| image:: ../_static/sys/sys_060.png
+    :height: 260
+    :width: 700
+
+.. |sys_070| image:: ../_static/sys/sys_070.png
+    :height: 378
+    :width: 700
+    :target: ../_static/sys/sys_070_full.png
+
+.. |sys_080| image:: ../_static/sys/sys_080.png
+    :height: 397
+    :width: 700
+    :target: ../_static/sys/sys_080_full.png
+
+.. |sys_085| image:: ../_static/sys/sys_085.png
+    :height: 313
+    :width: 700
+
+.. |sys_090| image:: ../_static/sys/sys_090.png
+    :height: 436
+    :width: 700
+    :target: ../_static/sys/sys_090_full.png
