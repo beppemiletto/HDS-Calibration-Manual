@@ -11,18 +11,25 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+from datetime import datetime
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
 
+
 # -- Project information -----------------------------------------------------
+now = datetime.now()
+year = str(now.year)
+month = str(now.month)
+day = str(now.day)
 
 project = 'HDS Calibration Manual'
-copyright = '2020, Application Department'
-author = 'Application Department'
+author = 'Metatron S.p.A. - Application Department'
+copyright = "'{}-{}' by '{}'".format(month, year, author)
 
 # The full version, including alpha/beta/rc tags
-release = '0.a1'
+version = "0.a1"
+release = version
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,10 +37,16 @@ release = '0.a1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
+extensions = ['sphinx.ext.intersphinx'
 ]
 
 master_doc = 'index'
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'restructuredtext',
+    '.md': 'markdown',
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -58,6 +71,9 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
     html_theme = 'sphinx_rtd_theme'
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+    # html_style = 'custom_theme.css'
+
+
 
 # otherwise, readthedocs.org uses their theme by default, so no need to specify it
 
@@ -82,3 +98,7 @@ html_logo = '_static/Metatron_logo_head.png'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+
+numfig = True

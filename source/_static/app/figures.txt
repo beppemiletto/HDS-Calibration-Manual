@@ -1,0 +1,9 @@
+.. |can_010| image:: ../_static/app/can_010.png
+    :height: 450
+    :width: 552
+
+
+.. |can_020| image:: ../_static/app/can_020.png
+    :height: 175
+    :width: 175
+    :target: https://fr.bosch-automotive.com/en/parts_and_accessories/engine_systems_1/gasoline_1/hot_film_air_mass_meters_1/hot_film_air_mass_meters_6

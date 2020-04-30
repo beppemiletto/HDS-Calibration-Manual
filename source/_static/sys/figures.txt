@@ -14,32 +14,15 @@
     :target: https://www.kistler.com/en/applications/automotive-research-test/engine-research-development/combustion-analysis-cylinder-pressure-testing/
 
 .. |sys_040| image:: ../_static/sys/sys_040.png
-    :height: 148
+    :height: 394
     :width: 700
 
 .. |sys_050| image:: ../_static/sys/sys_050.png
-    :height: 153
-    :width: 700
+    :height: 131
+    :width: 300
+    :target: https://www.motec.com.au/ltc/ltcoverview/
 
 .. |sys_060| image:: ../_static/sys/sys_060.png
-    :height: 260
+    :height: 308
     :width: 700
 
-.. |sys_070| image:: ../_static/sys/sys_070.png
-    :height: 378
-    :width: 700
-    :target: ../_static/sys/sys_070_full.png
-
-.. |sys_080| image:: ../_static/sys/sys_080.png
-    :height: 397
-    :width: 700
-    :target: ../_static/sys/sys_080_full.png
-
-.. |sys_085| image:: ../_static/sys/sys_085.png
-    :height: 313
-    :width: 700
-
-.. |sys_090| image:: ../_static/sys/sys_090.png
-    :height: 436
-    :width: 700
-    :target: ../_static/sys/sys_090_full.png
