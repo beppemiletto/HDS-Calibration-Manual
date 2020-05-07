@@ -1,9 +1,82 @@
 .. |can_010| image:: ../_static/app/can_010.png
-    :height: 450
     :width: 552
-
+    :height: 450
 
 .. |can_020| image:: ../_static/app/can_020.png
-    :height: 175
     :width: 175
+    :height: 175
     :target: https://fr.bosch-automotive.com/en/parts_and_accessories/engine_systems_1/gasoline_1/hot_film_air_mass_meters_1/hot_film_air_mass_meters_6
+
+.. |can_030| image:: ../_static/app/can_030.png
+    :width: 300
+    :height: 221
+
+.. |can_040| image:: ../_static/app/can_040.png
+    :width: 640
+    :height: 320
+
+.. |can_050| image:: ../_static/app/can_050.png
+    :width: 700
+    :height: 219
+
+.. |mst_000| image:: ../_static/app/mst_000.png
+    :width: 700
+    :height: 308
+
+.. |mst_005| image:: ../_static/app/mst_005.png
+    :width: 300
+    :height: 237
+
+
+
+.. |mst_010| image:: ../_static/app/mst_010.png
+    :width: 700
+    :height: 175
+
+.. |mst_020| image:: ../_static/app/mst_020.png
+    :width: 565
+    :height: 154
+
+.. |mst_030| image:: ../_static/app/mst_030.png
+    :width: 600
+    :height: 418
+
+.. |mst_040| image:: ../_static/app/mst_040.png
+    :width: 600
+    :height: 450
+    :target: ../_static/app/mst_040_full_res.png
+
+.. |mst_050| image:: ../_static/app/mst_050.png
+    :width: 600
+    :height: 450
+    :target: ../_static/app/mst_050_full_res.png
+
+.. |mst_060| image:: ../_static/app/mst_060.png
+    :width: 600
+    :height: 450
+    :target: ../_static/app/mst_060_full_res.png
+
+.. |mst_070| image:: ../_static/app/mst_070.png
+    :width: 600
+    :height: 450
+    :target: ../_static/app/mst_070_full_res.png
+
+.. |mst_080| image:: ../_static/app/mst_080.png
+    :width: 600
+    :height: 450
+    :target: ../_static/app/mst_080_full_res.png
+
+.. |mst_085| image:: ../_static/app/mst_085.png
+    :width: 399
+    :height: 976
+
+.. |mst_090| image:: ../_static/app/mst_090.png
+    :width: 700
+    :height: 381
+
+.. |mst_100| image:: ../_static/app/mst_100.png
+    :width: 268
+    :height: 174
+
+
+

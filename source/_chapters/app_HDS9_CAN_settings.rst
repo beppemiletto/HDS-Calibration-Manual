@@ -37,54 +37,47 @@ HDS9 features 4 CAN buses each of them dedicated to a function:
     | CAN #4 - Hi B84 - Lw B83  | private      | NO          | NO              | NO           | NO         | YES         |
     +---------------------------+--------------+-------------+-----------------+--------------+------------+-------------+
 
+The 4 CAN lines are provided with embedded 120 Ohm terminations.
 
-CAN#1
------
+In a peer to peer connection, as the one aver CAN 1 for calibration system the other terminal must be terminated with 120 Ohm as well.
 
-Usage
-+++++
-
-.. TODO: develop the CAN usages descriptions
-
-Before starting the calibration of a new engine on the test bench, it’s necessary to have a complete control of all engine system, from air intake to exhaust gas. In particular it’s mandatory to control the temperatures of the head engine and of turbine inlet and outlet in order to maintain them, during the calibration, lower than limits fixed for materials.
-As engine instrumentation has to be customized for each application it’s not possible to give detailed instructions always valid.
-For the calibration work a typical engine instrumentation is reported in FIGURE below:
-
-.. figure:: ../_static/app/can_010.png
-    :height: 450
-    :width: 552
-    :target: ../_static/sys/sys_010_full.png
-
-    A scheme of the instrumentation
-
-The functions and priority of single instrumentation are in table below
-
-.. table:: Recommended instrumentation for HDS application development
-    :widths: auto
-
-    +--------------------------+--------------------------------------------+------------------------------+
-    | Instrumentations         |    Functions                               |  Priority                    |
-    +==========================+============================================+==============================+
-    |  Mass air flow meter     |    to calibrate the speed density model    |  Mandatory                   |
-    +--------------------------+--------------------------------------------+------------------------------+
-    |  Cyl. Press. Sensors     |    monitoring combustion                   |  Mandatory at least one cyl. |
-    +--------------------------+--------------------------------------------+------------------------------+
-    |  UEGO sensor             |    to verify Air Fuel Ratio                |  Mandatory                   |
-    +--------------------------+--------------------------------------------+------------------------------+
-    |  T inlet turbocharger    |   to estimate turbocharger work,           |  Mandatory                   |
-    +--------------------------+   material stress and                      +------------------------------+
-    |  T outlet turbocharger   |   to improve efficiency during calibration |  Optional                    |
-    +--------------------------+--------------------------------------------+------------------------------+
-    |  T exhaust single ducts  |   monitor combustion balance among cyls.   |  Optional                    |
-    +--------------------------+--------------------------------------------+------------------------------+
-    |  T in / out catalyst     |    to verify catalyst efficiency           |  Optional                    |
-    +--------------------------+--------------------------------------------+------------------------------+
-    |  Environment conditions  |    to set the base parameters              |  Optional                    |
-    +--------------------------+--------------------------------------------+------------------------------+
+In multiple nodes connection, for example in vehicle CAN 2, where is possible to have connected the ECU, the :term`IC`, the :term:`VCM`, :term:`TCM` the balncing of the termination must be designed with accurately. This competence is in charge of Vehicle manufacturer engineering.
 
 
-.. sidebar:: Hot-Film Air-Mass Meters
-    :subtitle: A standard Automotive Mass Production Components
+CAN connection generalities
+---------------------------
 
-    |can_020|
+Connection
+++++++++++
+`From Wikipedia, the free encyclopedia <https://en.wikipedia.org/wiki/CAN_bus#Layers>`_
 
+An automotive ECU will typically have a particular—often custom—connector with various sorts of cables, of which two are the CAN bus lines. Nonetheless, several de facto standards for mechanical implementation have emerged, the most common being the 9-pin D-sub type male connector with the following pin-out:
+
+*    pin 2: CAN-Low (CAN−)
+
+*    pin 3: GND (Ground)
+
+*    pin 7: CAN-High (CAN+)
+
+*    pin 9: CAN V+ (Power)
+
+.. figure::  ../_static/app/can_030.png
+    :width: 300
+    :height: 221
+    :align: right
+
+This de facto mechanical standard for CAN could be implemented with the node having both male and female 9-pin D-sub connectors electrically wired to each other in parallel within the node. Bus power is fed to a node's male connector and the bus draws power from the node's female connector. This follows the electrical engineering convention that power sources are terminated at female connectors. Adoption of this standard avoids the need to fabricate custom splitters to connect two sets of bus wires to a single D connector at each node. Such nonstandard (custom) wire harnesses (splitters) that join conductors outside the node reduce bus reliability, eliminate cable interchangeability, reduce compatibility of wiring harnesses, and increase cost.
+
+.. figure::  ../_static/app/can_040.png
+    :width: 640
+    :height: 320
+    :align: right
+
+ISO 11898-2, also called high-speed CAN (bit speeds up to 1 Mbit/s on CAN, 5 Mbit/s on CAN-FD), uses a linear bus terminated at each end with 120 Ω resistors.
+
+High-speed CAN signaling drives the CANH wire towards 5 V and the CANL wire towards 0 V when any device is transmitting a dominant (0), while if no device is transmitting a dominant, the terminating resistors passively return the two wires to the recessive (1) state with a nominal differential voltage of 0 V. (Receivers consider any differential voltage of less than 0.5 V to be recessive.) The dominant differential voltage is a nominal 2 V. The dominant common mode voltage (CANH+CANL)/2 must be within 1.5 to 3.5 V of common, while the recessive common mode voltage must be within ±12  of common.
+
+.. figure::  ../_static/app/can_050.png
+    :width: 700
+    :height: 219
+    :align: right
