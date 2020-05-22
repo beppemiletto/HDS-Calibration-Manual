@@ -2,11 +2,6 @@
 .. include:: ../_static/figures.txt
 .. include:: ../_static/app/figures.txt
 
-.. sectnum::
-    :prefix: Appendix_
-    :depth: 3
-    :start: 1
-
 |logo|
 
 

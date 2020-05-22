@@ -2,10 +2,6 @@
 .. include:: ../_static/figures.txt
 .. include:: ../_static/app/figures.txt
 
-.. sectnum::
-    :prefix: Appendix_
-    :depth: 3
-    :start: 2
 
 |mst_000|
 
@@ -139,4 +135,5 @@ Operative panel - DTC tab
 
 :term:`DTC`
 
-.. :TODO:: Description of the MST functions when picture available from `Dalla Pria <mailto:daniele.dallapria@metatron.it>`_
+.. TODO:
+    Description of the MST functions when picture available from `Dalla Pria <mailto:daniele.dallapria@metatron.it>`_

@@ -1,9 +1,5 @@
 .. include:: <isonum.txt>
 .. include:: ../_static/figures.txt
-.. sectnum::
-    :depth: 3
-    :start: 2
-
 
 
 |logo|

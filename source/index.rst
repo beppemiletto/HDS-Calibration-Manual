@@ -13,7 +13,9 @@ Welcome to HDS Calibration Manual
 :Version: |version|
 
 .. toctree::
-   :maxdepth: 3
+   :name: mastertoc
+   :numbered:
+   :maxdepth: 2
    :caption: Table of Contents
 
    _chapters/intro
@@ -21,6 +23,8 @@ Welcome to HDS Calibration Manual
    _chapters/gen_HDS9_general
 
    _chapters/sys_HDS9_instrumentation
+
+   fcn_HDS9_index
 
    _chapters/app_HDS9_CAN_settings
 

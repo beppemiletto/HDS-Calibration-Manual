@@ -74,7 +74,6 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
     # html_style = 'custom_theme.css'
 
 
-
 # otherwise, readthedocs.org uses their theme by default, so no need to specify it
 
 html_theme_options = {
@@ -90,7 +89,9 @@ html_theme_options = {
     'sticky_navigation': True,
     'navigation_depth': 4,
     'includehidden': True,
-    'titles_only': False
+    'titles_only': False,
+
+
 }
 
 html_logo = '_static/Metatron_logo_head.png'
@@ -98,6 +99,11 @@ html_logo = '_static/Metatron_logo_head.png'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'css/custom_theme.css',
+]
 
 
 

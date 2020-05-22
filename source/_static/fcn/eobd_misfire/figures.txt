@@ -1,0 +1,39 @@
+.. |misf_010| image:: ../_static/fcn/eobd_misfire/misf_010.png
+    :width: 700
+    :height: 263
+    :target: http://geltd.net/products/misfire-generator/
+
+.. |misf_020| image:: ../_static/fcn/eobd_misfire/misf_020.png
+    :width: 388
+    :height: 450
+
+.. |misf_030| image:: ../_static/fcn/eobd_misfire/misf_030.png
+    :width: 700
+    :height: 407
+    :target: ../_static/fcn/eobd_misfire/misf_030_full.png
+
+.. |misf_040| image:: ../_static/fcn/eobd_misfire/misf_040.svg
+
+.. |misf_050| image:: ../_static/fcn/eobd_misfire/misf_050.png
+    :width: 700
+    :height: 283
+    :target: ../_static/fcn/eobd_misfire/misf_050_full.png
+
+.. |misf_090_A| image:: ../_static/fcn/eobd_misfire/misf_090_A.png
+    :width: 700
+    :height: 394
+    :target: ../_static/fcn/eobd_misfire/misf_090_A_full.png
+
+.. |misf_090_B| image:: ../_static/fcn/eobd_misfire/misf_090_B.png
+    :width: 700
+    :height: 394
+    :target: ../_static/fcn/eobd_misfire/misf_090_B_full.png
+
+.. |misf_100| image:: ../_static/fcn/eobd_misfire/misf_100.png
+    :width: 700
+    :height: 360
+
+.. |misf_110| image:: ../_static/fcn/eobd_misfire/misf_110.png
+    :width: 700
+    :height: 77
+    :target: ../_static/fcn/eobd_misfire/misf_110_full.png
