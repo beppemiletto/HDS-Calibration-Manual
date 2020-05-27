@@ -39,6 +39,9 @@ Glossary
     CVC
         Vehicle Control Module - Body Control Module - Central Vehicle Controller. In automotive electronics, vehicle/body/central control module or 'body computer' is a generic term for an electronic control unit responsible for monitoring and controlling various electronic accessories in a vehicle's body.
 
+    WIP
+        Work In Progress - some item that is under development but still not ready.
+
     XCP
         XCP (or) "Universal Measurement and Calibration Protocol" is a network protocol originating from ASAM for connecting calibration systems to electronic control units, ECUs. It enables read and write access to variables and memory contents of microcontroller systems at runtime. Entire datasets can be acquired or stimulated synchronous to events triggered by timers or operating conditions. In addition, XCP also supports programming of flash memory.
 

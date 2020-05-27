@@ -270,7 +270,7 @@ The misfire detection is enabled when ``osMisfDetEn`` is = 1. Some calibration a
 
     |misf_100|
 
-    2. **Air mass flow limit** in table :guilabel:`otAIRFLOW_ENMISF` a lower limit of the `asQacMain`. The condition is True when  `asQacMain` is bigger than the value interpolated on the table  :guilabel:`otAIRFLOW_ENMISF` in function of ``bsRPM`` and ``zsTair``.
+    2. **Air mass flow limit** in table :guilabel:`otAIRFLOW_ENMISF` a lower limit of the ``asQacMain``. The condition is True when  ``asQacMain`` is bigger than the value interpolated on the table  :guilabel:`otAIRFLOW_ENMISF` in function of ``bsRPM`` and ``zsTair``.
 
     3. **Engine speed range** where the condition is True if :guilabel:`osMAX_RPM_ENMISF`  > ``bsRPM`` > :guilabel:`osMIN_RPM_ENMISF`.
 
@@ -309,12 +309,244 @@ The two different indexes are related to different misfiring patterns which need
 
 .. tip:: Cyclicity calibrations
 
-    The cycle.
+    Two cyclicities are calculated ``osCic_Cec`` and ``osCic_1``. Both of them are calculated according a general formula
 
+    .. math::
+        osCMedocG_{n-x} - {k * osCMedocG_{n} } + osCMedocG_{n+x} = osCic_{x=f(mode)}
+        :label: ``osCic_Cec`` and ``osCic_1`` calculation
 
+    where:
+
+    *n* is the index of TDC under analysis
+
+    *x* is the previous or following TDC distance in TDC and may vary depending on the engine configuration expressed by ``bsNUMCYL`` (RAM copy of :guilabel:`asNUMCYL` calibration)
+
+    *k* is a gain in calibration which symbol is :guilabel:`osCYCLICITY_GAIN` that must be in the range 2 to 10.
+
+    Scope of :guilabel:`osCYCLICITY_GAIN` calibration is the best separation within  ``osCic_Cec`` and ``osCic_1`` calculated in TDC with misfire and those same parameters calculated without misfire.
 
 .. _misfire_malfunction_triggering:
 
 MALFUNCTION TRIGGERING
 ~~~~~~~~~~~~~~~~~~~~~~
 
+Misfire event detection: the detection threshold
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A single misfire is detected when one of the two cyclicities  ``osCic_Cec`` and ``osCic_1`` overcome the respective detection thresholds ``osSgl_Cec`` and ``osSgl_1G``.
+
+.. tip:: The Thresholds for detecting misfire.
+
+    The general formula is:
+
+    .. math::
+        osTthcic_{mode} * osTwamisg * osQacMain_{delayed} = osSgl_{mode}
+        :label: ``osSgl_Cec`` and ``osSgl_1G`` general calculation
+
+    where:
+
+    *mode* can be `Cec` or `1G`
+
+    *osTthcic* comes from interpolation on respective tables
+
+    *osQacMain_delayed* is a delayed copy of the `asQacMain`
+
+    The table :guilabel:`otTTHCIC_CEC` is used for setting the global factor for calculate the detection threshold to be compared with ``osCic_Cec``. The table is interpolated in function of ``bsRPM`` and ``asEtasp``.
+
+    The table :guilabel:`otTTHCIC_1G` is used for setting the global factor for calculate the detection threshold to be compared with ``osCic_C1G``. The table is interpolated in function of ``bsRPM`` and ``asEtasp``.
+
+    The table :guilabel:`otTWAMISG` is used for setting a common correction factor for calculate the detection threshold to be compared both with ``osCic_Cec`` and ``osCic_C1G``. The table is interpolated in function of ``zsTh2o`` and ``asEtasp``.
+
+    Finally the :guilabel:`ofQAC_MAIN_DELAYED` fix (aka bypass) allow the application of a gain factor on the both thresholds ``osSgl_Cec`` and ``osSgl_1G``:
+
+        **Enabled to value 1** means to disable the correction factor at all.
+
+        **Enabled to value different from 1** means to apply a general gain to both ``osSgl_Cec`` and ``osSgl_1G``. The gain is exactly the value set in the fix_value parameter.
+
+        **Disabled** don't care about the value means to apply a general gain which value is ``asQacMain`` to both ``osSgl_Cec`` and ``osSgl_1G``.
+
+.. note::
+
+    The misfire detection strategy exploits the high numerical resolution of floating point allowing the adjustment of the numerical magnitude of Cyclicity and related threshold quite freely. The calibration of the gains spread in many point of calculation allow to use big or small numbers in table and in development environment.
+
+Filtering the cyclicity
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The strategy of misfire detection allows the filtering of the mean noise using two coefficients :guilabel:`osKMSGLMDCG` and :guilabel:`osKPSGLMDCG` respectively the Lower and Upper limits of the cyclicity to allow the filtering of them. The mean noise to be removed from ``osCic_Cec`` and ``osCic_1`` before the detection comparison with the threshold is calculated as following:
+
+1. if the ``osCic_Cec`` or ``osCic_1`` are respectively not above the values ``osSgl_Cec`` *  :guilabel:`osKPSGLMDCG` and ``osSgl_1G`` * :guilabel:`osKPSGLMDCG` **AND** not below  ``osSgl_Cec`` *  :guilabel:`osKMSGLMDCG` and ``osSgl_1G`` * :guilabel:`osKMSGLMDCG` then
+
+2. the value of a subtractive offset is updated saturated respectively to a positive value of  ``osSgl_Cec`` and ``osSgl_1G`` multiplied by  :guilabel:`osKPSGLMDCG` and a negative value of  ``osSgl_Cec`` and ``osSgl_1G``  multiplied by  :guilabel:`osKMSGLMDCG`.
+
+The physical meaning of this filtering operation is the removal of the symmetrical or asymmetrical noises for example due to torsional vibration or bad road vibrations transferred to crankshaft though the driveline.
+
+.. tip::
+
+    The preliminary calibration of :guilabel:`osKPSGLMDCG` and :guilabel:`osKMSGLMDCG` must be set to **0** until the calibration level is not ready for vehicle refinement.
+
+    The calibration of :guilabel:`osKPSGLMDCG` and :guilabel:`osKMSGLMDCG` must be performed on the vehicle when assessing the misfire detection strategy calibration on real road. Set both of them to 0, so allowinh no filtering at all. Ensure that in a dirty road but possible a real usage one in absence of misfire events the detection of misfire would not trigger any misfire. In case it happens, try to increase with steps of 0.2 and -0.2 the two calibration :guilabel:`osKPSGLMDCG` and :guilabel:`osKMSGLMDCG` till the false detections disappear.
+
+    After this preliminary calibration operates some real misfire and verify that on the same road, nevertheless the operating filtering, the detection works properly.
+
+    Shortly:
+
+    a. setting :guilabel:`osKPSGLMDCG` and :guilabel:`osKMSGLMDCG` to **0** the filtering is disabled.
+
+    b. setting :guilabel:`osKPSGLMDCG` to **+1** and :guilabel:`osKMSGLMDCG` to **-1** the filtering is maximum allowing the filter to remove a mean value up to the thresholds.
+
+    c. setting :guilabel:`osKPSGLMDCG` and :guilabel:`osKMSGLMDCG` to **not symmetrical values** the filtering can remove polarized offsets for example due to torsional phased resonances.
+
+After applying the filtering the cyclicity ``osCic_Cec`` become ``osCic_CecfG``. Compare the two value to assess the filtering efficiency.
+
+After applying the filtering the cyclicity ``osCic_1`` become ``osCic_1fG``. Compare the two value to assess the filtering efficiency.
+
+The selection of the best cyclicity
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The strategy provides many cyclicities and only one detection flag. Is possible to configure the detection using a single cyclicity, all cyclicity in a OR boolean node and even NONE, in case for example we want disable the final detection leaving the calculations running.
+
+.. tip:: **The CYCLICITY SELECTOR**
+
+    The flag indicating the result of the comparison operation among ``osCic_CecfG`` and ``osSgl_Cec`` is called ``osCicCecMisfDetect``.
+
+    The flag indicating the result of the comparison operation among ``osCic_1fG`` and ``osSgl_1`` is called ``osCic1MisfDetect``.
+
+    :guilabel:`osCIC_SELECTOR` can be set as following:
+
+    :guilabel:`osCIC_SELECTOR` set to **1** enable the usage of the ``osCicCecMisfDetect`` **only** to detect a single misfire.
+
+    :guilabel:`osCIC_SELECTOR` set to **2** enable the usage of the``osCic1MisfDetect`` **only** to detect a single misfire.
+
+    :guilabel:`osCIC_SELECTOR` set to **4** enable the usage of both ``osCicCecMisfDetect`` and ``osCic1MisfDetect`` **in OR** to detect a single misfire.
+
+    :guilabel:`osCIC_SELECTOR` set to **5** set permanently the resut of misifre detection to FALSE, in fact disabling the detection.
+
+    The choice of the right setting for :guilabel:`osCIC_SELECTOR` must be done based on empirical assessment on vehicle refinement and depends on many factors including the engine architecture, the vahicle usage, the scope of the misfire strategy calibration, ...., etc....
+
+The final judgment of the single event is recorded in the general e final flag ``osMisfDetect``.
+
+Detection of the misfire failure
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The single detection is the elementary part of the misfire malfunction triggering. A single :term:`TDC` can be fail or pass depending on the threshold exceeding or not. The single TDC concurs to a statistical aggregation made by means of progressive counters and finally a ratio threshold will determine the accurance of a failure or not.
+
+From emission regulations (EOBD or OBD2) it is required to activate a **continuous** the monitor of the misfire. When the strategy is active two discrete integrating "events windows" are updated. The adjective discrete means that each windows is initialized and worked out till the end before to start a new one.
+
+**200 Revolutions CAT DANGER Window**
+    The single windows makes a statistic based on counting the misfire detected events for 200 revolutions of the engine. So the number of TDC monitored is 200 * number of cylinder / 2. 400 TDCs for 4 cyls engine, 600 for 6 cyls and 800 for 8 cyls.
+
+    The function of this **FAST** window is to detect heavy percentage of misfire that can results in a dangerous temperature of the catalyst the may damage it.
+
+**1000 Revolutions EMISSION LIMIT Window**
+    The single windows makes a statistic based on counting the misfire detected events for 1000 revolutions of the engine. So the number of TDC monitored is 1000 * number of cylinder / 2. 2000 TDCs for 4 cyls engine, 3000 for 6 cyls and 4000 for 8 cyls.
+
+    The function of this **SLOW** window is to detect small percentage of misfire that can not results in a dangerous temperature of the catalyst but the may increase the emission of unburnt hydrocarbon over the admitted threshold.
+
+The counters inside the two above depicted windows are divided and specific for two different type of failures.
+
+**Cylinder Indexed Failure**
+    Every cylinders own a single counter that is incremented when a msifre event is recognized on that cylinder. The two windows by cylinder counters are called:
+
+        ``osMisfCylCnt200`` vector of cyls. number elements counters for 200 revolution window
+
+        ``osMisfCylCnt1000`` vector of cyls. number elements counters for 1000 revolution window
+
+**Random Cylinder Failure**
+    Every misfire detected event nevertheless the cylinder where occurs is integrated in a global counter that is called "Random" cylinder counter. The two random counters are:
+
+        ``osMisfRndCnt200`` a single scalar counter integrating all detected msifre events happened despite of the cylinder in the 200 revolutions window.
+
+        ``osMisfRndCnt1000`` a single scalar counter integrating all detected msifre events happened despite of the cylinder in the 1000 revolutions window.
+
+
+.. note:: The thresholds for the counters. Detecting the failure.
+
+    As already said, the misfire detection strategy id a diagnosis. The ultimate and general scope of a diagnosis function is to advise the driver / operator that something wrong is going on with the engine combustion. The most used system to give the signal is to light on a lamp. Often also to buzz some alert sound when the status of a lamp change.  Refer to the specific chapter of the manual :term:`WIP`.
+
+    .. TODO: to update the link to the lamp type and mode calibration for a generic diagnosis, when the module of the manual will be ready
+
+Interpolation on the thresholds table
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Since the counters of the statistical validation of the misfire failure works on discrete events windows of 200 and 1000 revolutions, at same time of counting the "misfire detected" event ratios against the "total events" the average engine working point indexes are calculated. The working point indexes are ``bsRPM`` and ``asEtasp``.
+
+``osMeanRPM200`` and ``osMeanEtasp200`` are the average working point indexes for 200 revolutions integrating window.
+
+``osMeanRPM1000`` and ``osMeanEtasp1000`` are the average working point indexes for 1000 revolutions integrating window.
+
+.. tip::
+
+    The tables used for calibrate the threshold are:
+
+    200 revolutions window for single cylinder :guilabel:`otTHR_CYL_MISF200` interpolated with ``osMeanRPM200`` and ``osMeanEtasp200``;
+
+    200 revolutions window for random cylinder :guilabel:`otTHR_RND_MISF200` interpolated with ``osMeanRPM200`` and ``osMeanEtasp200``;
+
+    1000 revolutions window for single cylinder :guilabel:`otTHR_CYL_MISF1000` interpolated with ``osMeanRPM1000`` and ``osMeanEtasp1000``;
+
+    1000 revolutions window for random cylinder :guilabel:`otTHR_RND_MISF1000` interpolated with ``osMeanRPM1000`` and ``osMeanEtasp1000``.
+
+    The number to be placed into each cluster of the table is the **number of maximum misfire detected events** allowed in the **total number of events** sampled by the specific counting window.
+
+    For example, considering a 8 cylinders engine, the following table shows how to calculate ratios on specific counting window:
+
+    .. table:: 8 Cylinders engine - Misfire threshold ratio examples
+
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+        |  Window    | counter    | TOTAL EVENTS | 1% Threshold  | 10% Threshold | 25% Threshold | 50% Threshold |
+        +============+============+==============+===============+===============+===============+===============+
+        |  200 REVs  | Single CYL |          100 |            1  |           10  |            25 |           50  |
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+        |  200 REVs  | Random     |          800 |            8  |           80  |           200 |          400  |
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+        | 1000 REVs  | Single CYL |          500 |            5  |           50  |           125 |          250  |
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+        | 1000 REVs  | Random     |         4000 |           40  |          400  |          1000 |         2000  |
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+
+    While for a 6 cylinder engine the situation is as following table
+
+     .. table:: 6 Cylinders engine - Misfire threshold ratio examples
+
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+        |  Window    | counter    | TOTAL EVENTS | 1% Threshold  | 10% Threshold | 25% Threshold | 50% Threshold |
+        +============+============+==============+===============+===============+===============+===============+
+        |  200 REVs  | Single CYL |          100 |            1  |           10  |            25 |           50  |
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+        |  200 REVs  | Random     |          600 |            6  |           60  |           150 |          300  |
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+        | 1000 REVs  | Single CYL |          500 |            5  |           50  |           125 |          250  |
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+        | 1000 REVs  | Random     |         3000 |           30  |          300  |           750 |         1500  |
+        +------------+------------+--------------+---------------+---------------+---------------+---------------+
+
+Every TDC the specific counter is compared with the specific threshold. This last is interpolated each TDC on the table based on the updated mean working point indexes. The fault is detected even during the evolution of the single window. The reset of the counter id cone at the end of a integrating windows. The fault is removed when a windows is completed with misfire detected event resulting less than the threshold.
+
+Enabling the diagnosis for each elements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Finally, in order to have the diagnosis Code Managed according to the general setting of every diagnosis, the general enable for the single element to be monitored must be individually enabled as follow, assuming that the minimum number of cylinders managed by HDS system is 4:
+
+.. tip::
+
+    For each cylinder ( 1 to 8 ) 
+
+    :guilabel:`dsMD1_AUTOD` must be set to 1 for enable the diagnosis or to 0 if you want disable for this cylinder.
+
+    :guilabel:`dsMD2_AUTOD` must be set to 1 for enable the diagnosis or to 0 if you want disable for this cylinder.
+
+    :guilabel:`dsMD3_AUTOD` must be set to 1 for enable the diagnosis or to 0 if you want disable for this cylinder.
+
+    :guilabel:`dsMD4_AUTOD` must be set to 1 for enable the diagnosis or to 0 if you want disable for this cylinder.
+
+    :guilabel:`dsMD5_AUTOD` must be set to 1 for enable the diagnosis or to 0 if this cylinder number is not available or you want disable for this cylinder.
+
+    :guilabel:`dsMD6_AUTOD` must be set to 1 for enable the diagnosis or to 0 if this cylinder number is not available or you want disable for this cylinder.
+
+    :guilabel:`dsMD7_AUTOD` must be set to 1 for enable the diagnosis or to 0 if this cylinder number is not available or you want disable for this cylinder.
+
+    :guilabel:`dsMD8_AUTOD` must be set to 1 for enable the diagnosis or to 0 if this cylinder number is not available or you want disable for this cylinder.
+
+    For Random Cylinder Misfire
+
+    :guilabel:`dsMDR_AUTOD` enable the random cylinder :term:`DTC` detection.
