@@ -108,6 +108,14 @@ The diagnosis of Misfire is divided functionally into 2 different main topics:
 
     ii. 1000 Engine Revolutions statistical window set for OBD2 / EOBD emission threshold exceeding
 
+.. warning:: **Engine Configurations**
+
+    1. The standard available misfire detection strategy actually can work on engine configuration with 4, 6 and 8 cylinders (don't care about the firing order). Different engine configuration need special development for dedicated SW branches.
+
+    2. The strategy is deeply based on the usage of a crankshaft speed wheel with 60 teeth (60 - x,  where x may be from 1 to 7). Other shapes need special SW development to be evaluated case by case.
+
+    3. The following sections will refer as default to a standard 6 cylinders configuration engine. Anyway the calibration procedures are mainly generalized and applicable to all allowed engine configurations in 1. If a different procedure is needed for 4 and 8 cylinders the dedicated tips are provided.
+
 .. _misfire_detection:
 
 Misfire Detection
@@ -333,7 +341,7 @@ MALFUNCTION TRIGGERING
 Misfire event detection: the detection threshold
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A single misfire is detected when one of the two cyclicities  ``osCic_Cec`` and ``osCic_1`` overcome the respective detection thresholds ``osSgl_Cec`` and ``osSgl_1G``.
+A single misfire is detected when one of the two filtered cyclicities  ``osCic_CecfG`` and ``osCic_1fG`` overcome the respective detection thresholds ``osSgl_Cec`` and ``osSgl_1G``.
 
 .. tip:: The Thresholds for detecting misfire.
 
@@ -372,7 +380,7 @@ A single misfire is detected when one of the two cyclicities  ``osCic_Cec`` and 
 Filtering the cyclicity
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-The strategy of misfire detection allows the filtering of the mean noise using two coefficients :guilabel:`osKMSGLMDCG` and :guilabel:`osKPSGLMDCG` respectively the Lower and Upper limits of the cyclicity to allow the filtering of them. The mean noise to be removed from ``osCic_Cec`` and ``osCic_1`` before the detection comparison with the threshold is calculated as following:
+The strategy of misfire detection allows the filtering of the mean noise using two coefficients :guilabel:`osKMSGLMDCG` and :guilabel:`osKPSGLMDCG`. They operated as filter coefficients and also operates on the respectively Lower and Upper limits of the cyclicity to allow the filtering of them. The mean noise to be removed from ``osCic_Cec`` and ``osCic_1`` before the detection comparison with the threshold is calculated as following:
 
 1. if the ``osCic_Cec`` or ``osCic_1`` are respectively not above the values ``osSgl_Cec`` *  :guilabel:`osKPSGLMDCG` and ``osSgl_1G`` * :guilabel:`osKPSGLMDCG` **AND** not below  ``osSgl_Cec`` *  :guilabel:`osKMSGLMDCG` and ``osSgl_1G`` * :guilabel:`osKMSGLMDCG` then
 
@@ -520,7 +528,7 @@ Since the counters of the statistical validation of the misfire failure works on
         | 1000 REVs  | Random     |         3000 |           30  |          300  |           750 |         1500  |
         +------------+------------+--------------+---------------+---------------+---------------+---------------+
 
-Every TDC the specific counter is compared with the specific threshold. This last is interpolated each TDC on the table based on the updated mean working point indexes. The fault is detected even during the evolution of the single window. The reset of the counter id cone at the end of a integrating windows. The fault is removed when a windows is completed with misfire detected event resulting less than the threshold.
+Every time a 200 or 1000 revolutions expires, the specific counter is compared with the specific threshold. This last is interpolated on the table based on the updated mean working point indexes. It means that the fault is detected at the end of the single revolutions based window. Also the reset of the counter is performed at the end of a integrating windows. The fault is removed (set to not present) when a windows is completed with misfire detected event resulting less than the threshold.
 
 Enabling the diagnosis for each elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
