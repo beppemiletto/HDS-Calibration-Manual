@@ -2,6 +2,9 @@ Glossary
 ========
 .. glossary::
 
+    ASIC
+        An ASIC (Application-Specific Integrated Circuit) is a microchip designed for a special application, such as a particular kind of transmission protocol or a hand-held computer. You might contrast it with general integrated circuits, such as the microprocessor and the random access memory chips in your PC. ASICs are used in a wide-range of applications, including auto emission control, environmental monitoring, and personal digital assistants (PDAs). An ASIC can be pre-manufactured for a special application or it can be custom manufactured (typically using components from a "building block" library of components) for a particular customer application.
+
     DFSO
         Deceleration Fuel Shut Off alias Cut-Off, is the complete cut of fuel injection operated when a negative torque is requested to the engine. Occurs when the accelerator pedal is fully released and engine start decelerate. During this mode the injection is totally stopped and engine operate only a fresh air pumping, normally emphasizing the 'engine breaking effect'.
 
@@ -21,6 +24,9 @@ Glossary
 
     MST
         Metatron Service Tool - The diagnostic tool provided by Metatron for HDS system
+
+    RF
+        Radio Frequency. Used in the context of the electromagnetic sources of noise that affect the electrical wiring and circuitry of the ECM, means the high frequency in the bands of Radio Broadcasting waves: mostly above 30 kHz up to 30 GHz.
 
     SOP
         Literally Start Of Production - is the project phase that conclude the development and start the exploitation in terms of production volumes generation.

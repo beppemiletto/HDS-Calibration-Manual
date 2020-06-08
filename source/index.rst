@@ -24,6 +24,8 @@ Welcome to HDS Calibration Manual
 
    _chapters/sys_HDS9_instrumentation
 
+   eng-lay_HDS9_index
+
    fcn_HDS9_index
 
    _chapters/app_HDS9_CAN_settings

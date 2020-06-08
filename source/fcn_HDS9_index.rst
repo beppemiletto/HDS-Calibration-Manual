@@ -1,4 +1,4 @@
-.. image:: _static/Metatron_logo.png
+`                                                                                                                                                                                                                                                                   .. image:: _static/Metatron_logo.png
 
 HDS9 Functions Calibration
 ==========================
