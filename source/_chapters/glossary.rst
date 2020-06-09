@@ -25,6 +25,9 @@ Glossary
     MST
         Metatron Service Tool - The diagnostic tool provided by Metatron for HDS system
 
+    RAM
+        Random Access Memory - the volatile memory of the microprocessor of the :term:`ECM`.
+
     RF
         Radio Frequency. Used in the context of the electromagnetic sources of noise that affect the electrical wiring and circuitry of the ECM, means the high frequency in the bands of Radio Broadcasting waves: mostly above 30 kHz up to 30 GHz.
 
