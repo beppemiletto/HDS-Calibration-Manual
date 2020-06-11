@@ -22,8 +22,19 @@ Glossary
     OEM
         OEM (pronounced as separate letters) is short for original equipment manufacturer, which is a somewhat misleading term used to describe a company that produces and resell to final customer product. Typically used for the vehicle manufacturer. More generally OEMs are manufacturers who resell another company's product under their own name and branding.
 
+    MPI
+        Multiple Points Injection (aka Multipoint Injection). Every inlet port of the engine has its own injector (or set of injectors) that delivers the fuel in the intaked air stream.
+
     MST
         Metatron Service Tool - The diagnostic tool provided by Metatron for HDS system
+
+    PWM
+    PDM
+        `From Wikipedia, the free encyclopedia <https://en.wikipedia.org/wiki/Pulse-width_modulation>`_
+
+        Pulse-width modulation (PWM), or pulse-duration modulation (PDM), is a method of reducing the average power delivered by an electrical signal, by effectively chopping it up into discrete parts. The average value of voltage (and current) fed to the load is controlled by turning the switch between supply and load on and off at a fast rate. The longer the switch is on compared to the off periods, the higher the total power supplied to the load. Along with maximum power point tracking (MPPT), it is one of the primary methods of reducing the output of solar panels to that which can be utilized by a battery.[1] PWM is particularly suited for running inertial loads such as motors, which are not as easily affected by this discrete switching, because their inertia causes them to react slowly. The PWM switching frequency has to be high enough not to affect the load, which is to say that the resultant waveform perceived by the load must be as smooth as possible.
+
+        The rate (or frequency) at which the power supply must switch can vary greatly depending on load and application. For example, switching has to be done several times a minute in an electric stove; 120 Hz in a lamp dimmer; between a few kilohertz (kHz) and tens of kHz for a motor drive; and well into the tens or hundreds of kHz in audio amplifiers and computer power supplies. The main advantage of PWM is that power loss in the switching devices is very low. When a switch is off there is practically no current, and when it is on and power is being transferred to the load, there is almost no voltage drop across the switch. Power loss, being the product of voltage and current, is thus in both cases close to zero. PWM also works well with digital controls, which, because of their on/off nature, can easily set the needed duty cycle. PWM has also been used in certain communication systems where its duty cycle has been used to convey information over a communications channel.
 
     RAM
         Random Access Memory - the volatile memory of the microprocessor of the :term:`ECM`.
@@ -33,6 +44,9 @@ Glossary
 
     SOP
         Literally Start Of Production - is the project phase that conclude the development and start the exploitation in terms of production volumes generation.
+
+    SPI
+        Single Point Injection (aka Singlepoint Injection or Central Injection). Identifies an injection layout where a single fuel metering device is located in single position. The metering device can be a set of injectors grouped in a single downstream fuel rail that deliver the fuel in the intaked air stream at a single location (usually right after the throttle body).
 
     TCM
         Transmission Control Module - The transmission control module can be a standalone controller or located in the (PCM) powertrain control module. The TCM receives input from various sensors and then uses this information to activate the (TCC) torque converter clutch, control line pressure and provide smooth shift timing. The TCM has preset data to compare these inputs and make the appropriate decision.
