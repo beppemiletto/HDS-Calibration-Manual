@@ -257,6 +257,10 @@
     :width: 600
     :height: 498
 
+.. |lay_430| image:: ../_static/lay-eng/lay_430.png
+    :width: 592
+    :height: 341
+
 .. |eng_010| image:: ../_static/lay-eng/eng_010.png
     :width: 328
     :height: 350

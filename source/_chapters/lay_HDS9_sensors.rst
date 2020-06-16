@@ -5,6 +5,8 @@
 Sensors signal conversion
 -------------------------
 
+.. TODO: Insert image of the complete sensors and actuator layout
+
 From the engine sensors come to the ECU inputs all the analog signals which are conditioned and associated to a channel name. Then is necessary to specify the equation, table, or map that converts from analog to physical units these variables.   In the table :ref:`table_list_sensors` below there is the complete list of all sensor managed by HDS ECU with the input pre-scaled channel name, the name of map used to convert the signal and the output scaled channel name.
 
 .. note:: Filtering the analog inputs.
@@ -170,7 +172,7 @@ Below examples of the HDS conversion map. Both cases, CANape and INCA maps are s
 Air Temperature sensor
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. list-table:: Oil temperature sensor
+.. list-table:: Air temperature sensor
     :widths: 50 50 50 50 50
     :header-rows: 1
 

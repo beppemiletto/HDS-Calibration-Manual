@@ -1,4 +1,5 @@
 .. include:: <isonum.txt>
+.. include:: <isogrk1.txt>
 .. include:: ../_static/figures.txt
 .. include:: ../_static/lay-eng/figures.txt
 
@@ -25,7 +26,7 @@ HDS system is based on :term:`MPI`. More precisely is capable of accurate Sequen
 
 The most common fuel metering devices, notwithstanding with the type of fuel managed, for spark ignited engines are injectors.
 
-Fuel injectors are very quick-acting on off valves capable of being cycled (that is opened and closed) in the order of few milliseconds. Injectors are available in a variety of flow rates and are also divided into low impedance and high impedance injectors depending on their electrical resistance. Peak-and–hold (P&O) drivers can drive both low impedance and high impedance injectors while saturation drivers can drive high impedance injectors only.
+Fuel injectors are very quick-acting on off valves capable of being cycled (that is opened and closed) in the order of few milliseconds. Injectors are available in a variety of flow rates and are also divided into low impedance and high impedance injectors depending on their electrical resistance. Peak-and–hold (P&H) drivers can drive both low impedance and high impedance injectors while saturation drivers can drive high impedance injectors only.
 
 .. note::
 
@@ -270,9 +271,106 @@ Since it is possible to have an injector scheme with more than one injector per 
 
     Repeat the procedure from B. to H. for all remaining ``zsPRail`` real working points setting a specific breapoint in  :guilabel:`qtINJGAIN`. Don't care for the moment about the temperature of the rail dependencies. They will be set in a second moment.
 
+    Supposing that the testing points for gas rail pressures ``zsPRail`` are 2000,  2500, 3000, 4000, 5000, 6000, 7000, 8000 [mbar] at the end of the first step of calibration we will have a set of data. For all sampled point is possible to calculate the density of the media (refer to chemistry table for density data of used media). Using the
 
+    .. math::
+        \rm\small {p * v = n * R * T}
+        :label: general gas equation
 
+    where:
 
+    * :math:`\rm\small p [atm] = \frac {zsPRail [mbar]}{1013.2501}` gas pressure Measure Unit conversion from [mbar] to std [atm].
 
+    * :math:`\rm\small v [liter]` injected volume of gas.
 
+    * :math:`\rm\small n [mol]` number of moles.
+
+    * :math:`\rm\small R = 0.0821 [\frac {l * atm}{mol * K}]` universal gas constant for the considered Measure Units.
+
+    * :math:`\rm\small T  [K] = zsTRail [°C]` temperature Measure Unit conversion from [°C] to absolute [K].
+
+    multiplying both terms by the molar mass :math:`\rm\small MM` we get:
+
+    .. math::
+        \rm\small {p * v * MM = n * R * T * MM}
+
+    and since the product of :math:`\rm\small n * MM` is the mass of gas :math:`\rm\small q` we can write:
+
+    .. math::
+        \rm\small {p * v * MM = q * R * T}
+
+    and since the ratio between :math:`\rm\small q` and :math:`\rm\small v` gives the density of the gas :math:`\rm\small \rho` we can write
+
+    .. math::
+        \rm\small {p *  MM = \rho * R * T}
+
+    and
+
+    .. math::
+        \rm\small {\rho = \frac {p *  MM} { R * T}}
+
+    so assuming the Molar Mass of pure CH :sub:`4` as :math:`\rm\small MM = 16.04 [\frac {g} {mol}]`
+
+    and knowing that the injector model gain :math:`\rm\small qsInjgain [\frac {\mu s} {mg}]` is a time to develop a unit of mass flow rate
+
+    we can build table like the following:
+
+    .. list-table:: Example of Injector Gain Testing
+        :widths: 35 35 35 35 35
+        :header-rows: 2
+
+        * - ``zsPRail``
+          - ``zsTRail``
+          - ``qsInjgain``
+          - |rgr|
+          - Gain :sub:`vol`
+        * - [mbar]
+          - [°C]
+          - [|micro|\s / l]
+          - [|micro|\s / mg]
+          - [g/l]
+        * - 2050
+          - 37
+          - 563
+          - 1.275
+          - 717869
+        * - 2524
+          - 39
+          - 512
+          - 1.560
+          - 798637
+        * - 2982
+          - 42
+          - 480
+          - 1.825
+          - 876159
+        * - 4036
+          - 35
+          - 435
+          - 2.527
+          - 1099093
+        * - 5004
+          - 32
+          - 415
+          - 3.163
+          - 1312835
+        * - 5985
+          - 28
+          - 380
+          - 3.834
+          - 1456887
+        * - 7042
+          - 25
+          - 347
+          - 4.556
+          - 1581080
+        * - 8016
+          - 15
+          - 305
+          - 5.367
+          - 1636853
+
+    The last column of the table Gain :sub:`vol` is the ``qsInjgain`` multiplied by (1000 * |rgr|) so the |micro|\s needed to develop a volume of 1 liter of media at the status of  ``zsPRail``. This number is not depending from the temperature since the mass term of the  |rgr| has been removed. So using this number for the specific value of pressure is possible to extrapolate a complete row of the :guilabel:`qtINJGAIN` assuming a desired set of temperature break point. This can be done dividing the Gain :sub:`vol` for the calculated density in each point temperature defined in the break points of :guilabel:`qtINJGAIN`. Using a spreadsheet or any other tools to calculate by Row and Column apply the formulas to every point of the :guilabel:`qtINJGAIN` table as per following example in picture below:
+
+    |lay_430|
 
