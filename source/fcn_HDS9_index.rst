@@ -11,3 +11,5 @@ HDS9 Functions Calibration
     _chapters/fcn_HDS9_misfire.rst
 
     _chapters/fcn_HDS9_fuel-system.rst
+
+    _chapters/veh_HDS9_functions.rst
