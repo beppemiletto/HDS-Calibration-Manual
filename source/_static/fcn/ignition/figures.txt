@@ -1,0 +1,4 @@
+.. |ign_010| image:: ../_static/fcn/ignition/ign_010.png
+    :width: 250
+    :height: 380
+

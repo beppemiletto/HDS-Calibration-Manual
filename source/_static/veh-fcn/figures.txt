@@ -1,3 +1,7 @@
 .. |veh_010| image:: ../_static/veh-fcn/veh_010.jpg
     :width: 700
     :height: 394
+
+.. |veh_020| image:: ../_static/veh-fcn/veh_020.png
+    :width: 661
+    :height: 433
