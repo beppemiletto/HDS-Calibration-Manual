@@ -2,8 +2,11 @@
 .. include:: ../_static/figures.txt
 .. include:: ../_static/lay-eng/figures.txt
 
-Engine parameters setting
--------------------------
+Engine / System parameters setting
+----------------------------------
+
+Engine parameters settings
+##########################
 
 Before starting the engine, it’s necessary to set some characteristic engine parameters included in the following list:
 
@@ -48,4 +51,14 @@ Before starting the engine, it’s necessary to set some characteristic engine p
 
 * :guilabel:`asNUMCYL`: number of cylinders of the engine. The calibration usually comes as default with the HDS SW, since the SW branch is dedicated to peculiar engine configurations. The :term:`RAM` copy of this calibration is ``asNCyl``. So :math:`asNCyl = asNUMCYL`
 
+.. _recommendation_1:
+
+System Recommended preliminary settings
+#######################################
+
+* :guilabel:`efVALV_MOD_ID`: set this fix to value 4. This setting disable a peculiar strategy of variable valve actuation management usually not available in standard engines.
+
+* :guilabel:`esVVA_IGNT3_SHIF`: set this fix to value 0. This setting disable a peculiar strategy of variable valve actuation management usually not available in standard engines.
+
 * :guilabel:`vsAPPL_TYPE`: Application Type. System calibration Must always be set to 2. The :term:`RAM` copy of this calibration is ``bsApplType``. So :math:`bsApplType = vsAPPL\_TYPE`. From this calibration descends many other automatic ECM to vehicle application behaviours. Ask to systems owner for more information.
+
