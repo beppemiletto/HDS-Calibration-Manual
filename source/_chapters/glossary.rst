@@ -15,6 +15,10 @@ Glossary
     ECM
         Engine Control Unit (Module) in the context of this document. The acronym may also refer more generally to Electronic Control Unit (Module), a larger and indefinite family of electronic controllers to which the engine control unit belongs.
 
+    FSM
+        Finite-state machine - `From Wikipedia, the free encyclopedia - FSM <https://en.wikipedia.org/wiki/Finite-state_machine>`_
+        A finite-state machine (FSM) or finite-state automaton (FSA, plural: automata), finite automaton, or simply a state machine, is a mathematical model of computation. It is an abstract machine that can be in exactly one of a finite number of states at any given time. The FSM can change from one state to another in response to some inputs; the change from one state to another is called a transition. An FSM is defined by a list of its states, its initial state, and the inputs that trigger each transition. Finite-state machines are of two types—deterministic finite-state machines and non-deterministic finite-state machines. A deterministic finite-state machine can be constructed equivalent to any non-deterministic one.
+
     IC
         Instrumentation Cluster , also called often Dashboard is the instrumented part of the cockpit with driver's indicators, gauges, lamps, odometer, speedometers, etc...
 

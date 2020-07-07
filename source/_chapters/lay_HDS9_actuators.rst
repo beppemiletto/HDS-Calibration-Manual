@@ -374,3 +374,4 @@ Since it is possible to have an injector scheme with more than one injector per 
 
     |lay_430|
 
+.. TODO: add the calibration instructions for remaining OFFSET component vs Vbat
