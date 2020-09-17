@@ -8,6 +8,8 @@ HDS9 Functions Calibration
     :maxdepth: 2
     :caption: Function Calibration Table Of Contents
 
+    _chapters/fcn_HDS9_qairs.rst
+
     _chapters/fcn_HDS9_ignition.rst
 
     _chapters/fcn_HDS9_misfire.rst

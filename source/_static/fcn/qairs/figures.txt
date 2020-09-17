@@ -1,0 +1,22 @@
+.. |qairs_010| image:: ../_static/fcn/qairs/qairs_010.png
+    :width: 250
+    :height: 392
+    :target: ../_static/fcn/qairs/qairs_010_full.png
+
+.. |qairs_020| image:: ../_static/fcn/qairs/qairs_020.png
+    :width: 225
+    :height: 331
+    :target: https://grassrootsmotorsports.com/articles/how-accurately-measure-your-compression-ratio/
+
+.. |qairs_030| image:: ../_static/fcn/qairs/qairs_030.png
+    :width: 202
+    :height: 528
+
+.. |qairs_040| image:: ../_static/fcn/qairs/qairs_040.png
+    :width: 700
+    :height: 330
+
+.. |qairs_050| image:: ../_static/fcn/qairs/qairs_050.png
+    :width: 662
+    :height: 807
+

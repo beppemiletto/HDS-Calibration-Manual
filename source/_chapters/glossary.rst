@@ -5,6 +5,9 @@ Glossary
     ASIC
         An ASIC (Application-Specific Integrated Circuit) is a microchip designed for a special application, such as a particular kind of transmission protocol or a hand-held computer. You might contrast it with general integrated circuits, such as the microprocessor and the random access memory chips in your PC. ASICs are used in a wide-range of applications, including auto emission control, environmental monitoring, and personal digital assistants (PDAs). An ASIC can be pre-manufactured for a special application or it can be custom manufactured (typically using components from a "building block" library of components) for a particular customer application.
 
+    COP
+        Conformity of Production (COP) is a means of evidencing the ability to produce a series of products that exactly match the specification, performance and marking requirements outlined in the type approval documentation.  Whether you are a manufacturer, or the agent applying for approvals on behalf of a manufacturer, and whatever your product is, suitable COP arrangements must be made.
+
     DFSO
         Deceleration Fuel Shut Off alias Cut-Off, is the complete cut of fuel injection operated when a negative torque is requested to the engine. Occurs when the accelerator pedal is fully released and engine start decelerate. During this mode the injection is totally stopped and engine operate only a fresh air pumping, normally emphasizing the 'engine breaking effect'.
 
