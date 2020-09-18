@@ -302,7 +302,7 @@ Estimate the Mass Air Flow - Speed Density Strategy
 Here we are! After having ensured a safe, reliable, accurate torque control now is time to think to an efficient combustion. The most important parameter to be controlled in order to ensure an optimal combustion is the Air / Fuel Ratio. That means basically to be able to rely on a measure / estimate of the quantity of air sucked so as to be able to calculate accordingly a corresponding amount of fuel that must be injected. This operation must be repeated for each new need for injection that for a MPI system means repeat the calculation for each combustion phase. The term used from an engine control strategy standpoint is at each TDC. HDS is basically using a very common and popular strategy called Speed Density.
 
 The general equation of speed density
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++++++++++++++++++++++++++++++++++++++
 
 The transfer function of Speed Density calculation is the following:
 
@@ -328,10 +328,11 @@ The transfer function of Speed Density calculation is the following:
 
         \label {SD calculation}
 
+Descriptions of the transfer function if provided in  `Submodels of speed density model`_
 
 .. note::
 
-    The transfer function is generalized and is used to calculate different Air Quantities depending from the inputs provided in the entry point :math:` \small asPasp` .
+    The transfer function is generalized and is used to calculate different Air Quantities depending from the inputs provided in the entry point :math:`\small asPasp` .
 
     .. table::
 
@@ -365,9 +366,29 @@ The transfer function of Speed Density calculation is the following:
     Herein after ``asQahMapSD_Rec`` will be called simply ``asQahMapSD`` .
 
 Submodels of speed density model
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+++++++++++++++++++++++++++++++++
 
 The complete speed density model includes independent sub-models. If not properly included, at least intended to provide some input that may affect the general accuracy of the Speed Density function outputs. Before the calibration of wide and time consuming tables take care of checking the proper setting and working of the following sub-models. As already said many parameters included may be affected each others. **Verify continuously the correct identification / calibration of sub-models** in a iterative converging process.
+
+.. sidebar:: The displacement and compression ratio
+
+    Often in case of engine conversion from Diesel to NG the clearance volume is not known. Better to measure this parameter with traditional capacity methods.
+
+    |qairs_020|
+
+.. topic:: Geometric characteristics
+
+    - ``asNCyl`` symbol is set by the calibration symbol :guilabel:`asNUMCYL` and represents the number of cylinders of the engine. It can assume tha values of 4, 6, 8. Most of time the deafult value is already set properly since HDS sw versions are engine's cylinder number depending.
+
+    - :guilabel:`asVEFF` is a calibration symbol in  [:math:`\small m^3`] for calibrate the engine's single cylinder displacement aka *swept volume*. It can be calculated by means of cylinder bore and stroke with the elementary geometric displacement of a cylinder :math:`\small asVEFF\ =\ \pi\ *\ \frac{Cyl.Bore^2 [m]}{4} * Stroke [m]`.
+
+        .. warning:: The accuracy of :guilabel:`asVEFF` since is expressed in cubic meter is not high. Be aware that the accurate value may not be inputted properly. Please choose the closest value that fits your case. There isn't any preferred approximation.
+
+    - :guilabel:`asCORR_VEFF` is a calibration symbol that is multiplied by :guilabel:`asVEFF` to correct the second parameter. It can be used to recover some accuracy lost in :guilabel:`asVEFF` (:math:`\small\ 1*10^{-4}\ lsb` ) or just left to its deafult value 1.0 and used in a second moment for some empiric best fit of the SD function.
+
+    - :guilabel:`asVC` is a calibration symbol in  [:math:`\small m^3`] for calibrate the engine's single cylinder dead volume aka *clearance volume*. It must be known as an engine characteristics or can be determined using a oil volume difference measure as the procedure used to measure the compression ratio of a cylinder `How to Accurately Measure Your Compression Ratio <https://grassrootsmotorsports.com/articles/how-accurately-measure-your-compression-ratio/>`_ or by measuring the engine geometry as per `How to Determine Compression Ratio <https://www.yourmechanic.com/article/how-to-calculate-compression-ratio>`_.
+
+        .. warning:: The accuracy of :guilabel:`asVC` since is expressed in cubic meter is not high. Be aware that the accurate value may not be inputted properly. Please choose the closest value that fits your case. There isn't any preferred approximation.
 
 .. topic:: Pressure at the intake valve estimation
 
@@ -458,11 +479,134 @@ The complete speed density model includes independent sub-models. If not properl
 
             * :guilabel:`qfAFSTECHIO` fix calibration symbol can be used during calibration development in order to avoid any ``qsAFStechio`` variation from the nominal preferred value.
 
+.. topic:: The Mixture Quantity
+
+    In the general equation of speed density function the part related to the Mixture Quantity
+
+    .. math::
+
+        \tiny asQmix = asQaspDivPcoll\ *\ asPaspTmp\ *\ 100
+
+        \tiny \text {where:}
+
+        \tiny asQaspDivPcoll = \frac{ EffectiveVolume }{ \frac{EffectiveVolume}{ asResAspir} +   \frac{asTimePhase}{asPmix}*asTValv*8.31 }
+
+        \tiny \text {where:}
+
+        \tiny EffectiveVolume\ =\ asVEFF\ *\ asCORR\_VEFF + asVC
+
+        \label {QMix_4_SD calculation}
+
+    includes the term ``asResAspir`` that is a complex parameter in [:math:`\small\ \frac{1}{s*m}`] proportional to the intake efficiency. It is interpolated from the :guilabel:`atRES_ASPIR` table or :guilabel:`atRES_ASPIRx` tables system.
+
+    .. tip:: Cylinder by cylinder or single atRES_ASPIR?
+
+        Before to proceed with :guilabel:`atRES_ASPIR` table/s calibration you must decide the approach to be used for this task. HDS provides an option for calibrate the intake efficiency cylinder by cylinder. This option can be adopted in case of heavy air charge load difference among the cylinders. The option let the calibrator to individually calibrate the estimated air charge for each cylinder. The choice of this option introduces a big overhead of time for calibration and engine instrumentation. It is possible to calibrate :guilabel:`atRES_ASPIRx` if all cylinder's exhaust duct have their own wide band oxygen sensor.
+
+        The option can be choose using the :guilabel:`afCUR_CYL_TST` fix calibration symbol. :guilabel:`afCUR_CYL_TST` **ENABLED** and set to 0 (zero) impose the usage of the single :guilabel:`atRES_ASPIR` while :guilabel:`afCUR_CYL_TST` **ENABLED** (don't care about the value) imposes the usage of the complete set of :guilabel:`atRES_ASPIRx` . For example on a 8 cylinder engine the available tables :guilabel:`atRES_ASPIRx` are :guilabel:`atRES_ASPIR1`, :guilabel:`atRES_ASPIR2`, :guilabel:`atRES_ASPIR2`, :guilabel:`atRES_ASPIR3`, :guilabel:`atRES_ASPIR4`, :guilabel:`atRES_ASPIR5`, :guilabel:`atRES_ASPIR6`, :guilabel:`atRES_ASPIR7` and :guilabel:`atRES_ASPIR8`.
+
+        .. warning::
+
+            **All atRES_ASPIR and atRES_ASPIRx share the same set of breakpoints.** All of them are interpolated f(``bsRPM``, (``asPre``, ``zsMap`` ). Each TDC the table to be interpolated is selected by means of  ``bsCurCyl`` + 1 value. The :guilabel:`afCUR_CYL_TST` fix calibration symbol fixes the value coming from ``bsCurCyl``. The single  :guilabel:`atRES_ASPIR` is selected if  (``bsCurCyl`` + 1 ) is fixed to 0 by means of  :guilabel:`afCUR_CYL_TST` **ENABLED** and set to 0 (zero).
+
+The predictor and recovery function - alpha / n function
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Generally speaking the definition of an alpha / n function refers to a fuel control system where the fuel quantity to be injected is directly function of engine speed (the n)  and throttle opening (the aplha). **In HDS function this definition is not applicable** .
+
+In HDS **the general scope of the strategy is to estimate the air flow rate using as input the engine speed and the throttle opening** .
+
+The function is structured in two parts:
+
+    #. In the first part of the function, a block called *EtaspCalc* , to define the efficiency of the throttle valve, where is identified a pair of values, one function of the actual position of the valve (``zsPotenzThr``) and the other function of the target position to satisfy the requested torque (``hsThrotRefPerc``).
+    #. A block to compute the QAir according with the AlphaN model (called *AlphaN* );
+
+.. topic:: _`EtaspCalc`
+
+    The block EtaspCalc, defines a pair of efficiency using the the actual position of the valve ``zsPotenzThr`` and the other function of the target position to satisfy the requested torque ``hsThrotRefPerc`` interpolating a pair of 2D-maps.
+
+    .. tip::
+
+        #. The table for the efficiency function of the actual position of the valve ``zsPotenzThr`` defined by the 2D-map :guilabel:`atETSP_FARF` [adm] f(``bsRPM`` , ``zsPotenzThr``). The output signal is ``asEtaspFarf``.
+
+        #. The table for the efficiency function of the target position of the throttle valve ``hsThrotRefPerc`` defined by the 2D-map :guilabel:`atETSP_FARF_PRE`  [adm] and f( ``bsRPM`` , ``hsThrotRefPerc`` ). The output signal is ``asEtaspFarfPre``.
+
+.. topic:: AlphaN model
+
+    The air mass flow rate [mg/cc] (or mg per stroke cycle) is estimated using the following:
+
+    .. math::
+
+        \small\ Qac_{AplhaN}\ = (\frac{P_{Boost}}{P_{Atm}} )\ * Qac_{ref} * \eta
+
+
+    Where:
+
+    * :math:`\small\ (\frac{P_{Boost}}{P_{Atm}})` the normalized pressure (ratio between atmospheric pressure and  boost pressure) upstream to throttle body.
+
+    *  :math:`\small\ Qac_{Ref}` is the single cylinder Air Charge Reference [mg] for each cylinder stroke (mg/cc). It is the symbol ``asQAirTdcRef`` copy of the calibration symbol :guilabel:`asQAIR_TDC_REF` . This calibration is empirically adjusted after having set a preliminary value of a air mass in mg when the pressure at inlet valve is equal to the atmospheric one.
+
+    * :math:`\small\eta` is function of engine speed and throttle position (2D map) representing the throttle efficiency ``asEtaspFarf`` and ``asEtaspFarfPre`` (see previous topic `EtaspCalc`_ ).
+
+    In order to convert the :math:`\small\ Qac_{AplhaN}` thus obtained expressed in [mg/cc] into :math:`\small\ Qah_{AplhaN}` [kg/h] , the following formula is applied:
+
+    .. math::
+
+        \small\ Qah_{AplhaN}\ =\ Qac_{AplhaN}`\ *\ EngineSpeed\ *\ \frac{N_{Cyl}}{2}\ *\ \frac{60}{10^6}
+
+
+    The AlphaN model shall take into account the possible contribute of the EGR (``wsMassFlowEGRObj``) as a simple additive term, in according with
+    the following formula:
+
+    .. math::
+
+        \small\ Q_{air}\ =\ Q_{mix}\ -\ Q_{EGR}
+
+    The resulting formula, consequently will be:
+
+    .. math::
+
+        \small\ Qah_{AplhaN}\ =\ \Biggl[\ \biggl(\ \Bigl(\frac{P_{Boost}}{P_{Atm}} \Bigr)\ * Qac_{ref} * \eta\biggr)\ *\ EngineSpeed\ *\ \frac{N_{Cyl}}{2}\ *\ \frac{60}{10^6}\Biggr]\ -\ Q_{EGR}
+
+.. topic:: _`asEtasp` - Load Index
+
+    .. warning::
+
+        **BIG WARNING!!**
+
+        Embedded in the Air Quantity model there is a calculation that has a critical priority in many other functions all over the HDS strategies. It is the **General Load Index** called ``asEtasp`` that is used for interpolate on many important table, e.g. the Spark Advance , closed AFR loop control parameters, Threshold for activate/deactivate many functions, ...., etc...
+
+        Practically the ``asEtasp`` [adm] with range 0 to 3 load index is calculated as:
+
+        .. math::
+
+            \small\ \eta_{load}\ =\ \frac{Qac_{air}}{Qac_{Ref}}
+
+        Where:
+
+        * :math:`\small\eta_{load}`  is the **General Load Index** called ``asEtasp`` [adm] .
+
+        * :math:`\small\ Qac_{air}` is the ``asQacMain`` [mg/cc] coming from a local conversion of ``asAirMain`` with following formula:
+
+            .. math::
+
+                \small asQacMain\ =\ \frac{asAirMain}{EngineSpeed\ *\ \frac{N_{CYL}}{2}\ *\ \frac{60}{10^6}}
+
+            where:
+
+            * ``asAirMain`` is the Air Quantity used for the calculation of the fuel quantity according to the selectors :guilabel:`asAIR_SENS_PRI` and :guilabel:`asMOD_PRE_EN` settings (see `The air flows configuration selectors`_
+
+        *  :math:`\small\ Qac_{Ref}` is the single cylinder Air Charge Reference [mg] for each cylinder stroke [mg/cc]. It is the symbol ``asQAirTdcRef`` copy of the calibration symbol :guilabel:`asQAIR_TDC_REF` . This calibration is empirically adjusted after having set a preliminary value of a air mass in mg when the pressure at inlet valve is equal to the atmospheric one.
 
 
 
-``asQahMapSD``  and ``asQahPreSD`` calibration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+QAir Calibration - Putting everything together
+##############################################
+
+The above chapters and paragraphs clearly state that the the Air Quantity Management is a complex system with many levels of intercation among single sub-models.
+Hence the calibration approach is more effective if consider all single elements at the same time concurring to a consistent and accurate calibration of themselves. Hereby some suggestions to help this approach **considering a MPI, Stoichiometric, torque driven engine application target**.
 
 .. tip::
 
@@ -485,57 +629,4 @@ The complete speed density model includes independent sub-models. If not properl
         .. warning::
 
             In case during :term:`COP` checks the tolerance goes out from the limits, consider to review the calibration in order to reset the deviations. If the tolerances cannot be accomplished by the production process, consider to review some engine part or some procedure of the process. In any case the HDS system can recover by means of the closed loop AFR control and self adaptation up to a 20% deviation. But during the preliminary phases when the self adaptation is still converging to final value some lack of performances or emission control may be found.
-
-    - ``asNCyl`` symbol is set by the calibration symbol :guilabel:`asNUMCYL` and represents the number of cylinders of the engine. It can assume tha values of 4, 6, 8. Most of time the deafult value is already set properly since HDS sw versions are engine's cylinder number depending.
-
-    - :guilabel:`asVEFF` is a calibration symbol in  [:math:`\small m^3`] for calibrate the engine's single cylinder displacement aka *swept volume*. It can be calculated by means of cylinder bore and stroke with the elementary geometric displacement of a cylinder :math:`\small asVEFF\ =\ \pi\ *\ \frac{Cyl.Bore^2 [m]}{4} * Stroke [m]`.
-
-        .. warning:: The accuracy of :guilabel:`asVEFF` since is expressed in cubic meter is not high. Be aware that the accurate value may not be inputted properly. Please choose the closest value that fits your case. There isn't any preferred approximation.
-
-    - :guilabel:`asCORR_VEFF` is a calibration symbol that is multiplied by :guilabel:`asVEFF` to correct the second parameter. It can be used to recover some accuracy lost in :guilabel:`asVEFF` (:math:`\small\ 1*10^{-4}\ lsb` ) or just left to its deafult value 1.0 and used in a second moment for some empiric best fit of the SD function.
-
-    |qairs_020|
-
-    - :guilabel:`asVC` is a calibration symbol in  [:math:`\small m^3`] for calibrate the engine's single cylinder dead volume aka *clearance volume*. It must be known as an engine characteristics or can be determined using a oil volume difference measure as the procedure used to measure the compression ratio of a cylinder `How to Accurately Measure Your Compression Ratio <https://grassrootsmotorsports.com/articles/how-accurately-measure-your-compression-ratio/>`_ or by measuring the engine geometry as per `How to Determine Compression Ratio <https://www.yourmechanic.com/article/how-to-calculate-compression-ratio>`_.
-
-        .. warning:: The accuracy of :guilabel:`asVC` since is expressed in cubic meter is not high. Be aware that the accurate value may not be inputted properly. Please choose the closest value that fits your case. There isn't any preferred approximation.
-
-    - ``asResAspir`` is a complex parameter in [:math:`\small\ \frac{1}{s*m}`] proportional to the intake efficiency. It is interpolated from the :guilabel:`atRES_ASPIR` table or :guilabel:`atRES_ASPIRx` tables system.
-
-.. topic:: Cylinder by cylinder or single atRES_ASPIR?
-
-    Before proceed with :guilabel:`atRES_ASPIR` table/s calibration you must decide the approach to be used for this task. HDS provides an option for calibrate the intake efficiency cylinder by cylinder. This option can be adopted in case of heavy air charge load difference among the cylinders. The option let the calibrator to individually calibrate the estimated air charge for each cylinder. The choice of this option introduces a big overhead of time for calibration and engine instrumentation. It is possible to calibrate :guilabel:`atRES_ASPIRx` if all cylinder's exhaust duct have their own wide band oxygen sensor.
-
-    .. tip::
-
-        The option can be choose using the :guilabel:`afCUR_CYL_TST` fix calibration symbol. :guilabel:`afCUR_CYL_TST` **ENABLED** and set to 0 (zero) impose the usage of the single :guilabel:`atRES_ASPIR` while :guilabel:`afCUR_CYL_TST` **ENABLED** (don't care about the value) imposes the usage of the complete set of :guilabel:`atRES_ASPIRx` . For example on a 8 cylinder engine the available tables :guilabel:`atRES_ASPIRx` are :guilabel:`atRES_ASPIR1`, :guilabel:`atRES_ASPIR2`, :guilabel:`atRES_ASPIR2`, :guilabel:`atRES_ASPIR3`, :guilabel:`atRES_ASPIR4`, :guilabel:`atRES_ASPIR5`, :guilabel:`atRES_ASPIR6`, :guilabel:`atRES_ASPIR7` and :guilabel:`atRES_ASPIR8`.
-
-        .. warning::
-
-            **All atRES_ASPIR and atRES_ASPIRx share the same set of breakpoints.** All of them are interpolated f(``bsRPM``, (``asPre``, ``zsMap`` ). Each TDC the table to be interpolated is selected by means of  ``bsCurCyl`` + 1 value. The :guilabel:`afCUR_CYL_TST` fix calibration symbol fixes the value coming from ``bsCurCyl``. The single  :guilabel:`atRES_ASPIR` is selected if  (``bsCurCyl`` + 1 ) is fixed to 0 by means of  :guilabel:`afCUR_CYL_TST` **ENABLED** and set to 0 (zero).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

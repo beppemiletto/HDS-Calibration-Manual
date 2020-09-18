@@ -28,7 +28,7 @@ author = 'Metatron S.p.A. - Application Department'
 copyright = "'{}-{}' by '{}'".format(month, year, author)
 
 # The full version, including alpha/beta/rc tags
-version = "0.a2"
+version = "0.b1"
 release = version
 
 
