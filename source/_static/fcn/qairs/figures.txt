@@ -20,3 +20,29 @@
     :width: 662
     :height: 807
 
+
+.. |qairs_060| image:: ../_static/fcn/qairs/qairs_060.png
+    :width: 700
+    :height: 598
+
+
+.. |qairs_070| image:: ../_static/fcn/qairs/qairs_070.png
+    :width: 474
+    :height: 472
+
+.. |qairs_080_1| image:: ../_static/fcn/qairs/qairs_080_1.png
+    :width: 691
+    :height: 531
+
+.. |qairs_080_2| image:: ../_static/fcn/qairs/qairs_080_2.png
+    :width: 658
+    :height: 539
+
+.. |qairs_080_3| image:: ../_static/fcn/qairs/qairs_080_3.png
+    :width: 664
+    :height: 533
+
+.. |qairs_080_4| image:: ../_static/fcn/qairs/qairs_080_4.png
+    :width: 666
+    :height: 529
+

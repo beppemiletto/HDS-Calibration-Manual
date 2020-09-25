@@ -605,28 +605,149 @@ The function is structured in two parts:
 QAir Calibration - Putting everything together
 ##############################################
 
-The above chapters and paragraphs clearly state that the the Air Quantity Management is a complex system with many levels of intercation among single sub-models.
+The above chapters and paragraphs clearly state that the the Air Quantity Management is a complex system with many levels of interaction among single sub-models.
 Hence the calibration approach is more effective if consider all single elements at the same time concurring to a consistent and accurate calibration of themselves. Hereby some suggestions to help this approach **considering a MPI, Stoichiometric, torque driven engine application target**.
+
+.. topic:: **The accuracy of Speed Density estimation**
+
+    Nevertheless the calculation chain of speed density has a numerical accuracy much higher, we define the **accuracy of the calibration** as the percentage deviation between the estimated value and of Air Mass Flow and the measured value. By avoiding going into the specious argument of the accuracy of the measurement of the air flow rate which depends on the system used, and therefore assuming that the measured air flow rate is undoubtedly the reference flow rate ( **ReferenceAir** ), we can say that the accuracy of the estimate of the flow rate of the air by calculating the Speed Density (SD) is equal to :math:`\small Accuracy_{SD}\ =\ \frac{ asQahSpeedDensity - ReferenceAir } {ReferenceAir}\ *\ 100`.
+
+    Considering that in a normal calibration procedure of a generic engine, we operate on a prototype engine constructed in such a way as to represent the sample with all the tolerances of the components at the center band value and that therefore the subsequent production phase will be distributed evenly around it, we can consider the following tolerance limits in the calibration of the speed density function:
+
+    - **Prototype** -> tolerance allowed +/- 5%
+
+    - **Pre-series sample** -> allowed tolerance +/- 7.5%
+
+    - **Standard production sample** -> tolerance allowed +/- 10%
+
+    .. warning::
+
+        In case during :term:`COP` checks the tolerance goes out from the limits, consider to review the calibration in order to reset the deviations. If the tolerances cannot be accomplished by the production process, consider to review some engine part or some procedure of the process. In any case the HDS system can recover by means of the closed loop AFR control and self adaptation up to a 20% deviation. But during the preliminary phases when the self adaptation is still converging to final value some lack of performances or emission control may be found.
+
+The Instrument List
+^^^^^^^^^^^^^^^^^^^
+
+Minimum Instrumentation Requirement:
+
+#. **Air Mass Flow Meter** measuring the air flow intaked by the engine. Placed upstream the compressor for turbocharged unit or before the throttle in case of Normal Aspirated Engine. As already said the most convenient solution is a Debimeter connected to the ECM input so it is possible to manage the **Reference Air** directly inside the Development framework (Canape or Inca) monitoring the ``zsQAirDebim`` symbol. This solution also allow to use the measured flow for fuel calculation setting :guilabel:`asAIR_SENS_PRI` calibration to 3: this option make more comfortable the management of the combustion when the Air Quantity Strategy is in a preliminary calibration state.
+
+#. **Engine Torque Display** - normally provided by the Engine Test Bed equipment must visualize the Torque in [N*m].
+
+#. **Exhaust Gas Pressure** - sampling before the turbine the pressure in the exhaust manifold plenum. The measure is of absolute pressure type in [mbar]. It is not required a fast sampling rate since just the maen value is needed and all the measure are in steady state.
+
+#. **Exhaust Gas Temperature** - The usual sampling point is the turbine inlet point where the sensor feel the real average value of the exhaust gases. If possible the availability of all the cylinder outlet sampling points can be very useful for load / combustion quality balance among cylinders. In this case, as exhaust temperature value, the mean value of single cylinder outlet can be more effective than the Turbine Inlet.
+
+#. **Inlet Valve Temperature** - It is a temperature sensor with the tip close to the inlet valve - used for calibrate the Inlet Valve Temperature Model.
+
+#. **Gas Flow Meter** - even not mandatory, it can be useful to verufy in case of doubt, the AFR / MAF / MFF consistency.
+
+Priority order calibration sequence
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The priority order explained in `The Top-Down Priority Approach`_ chapter is the same that can be conveniently followed when executing the calibration process of the Air Quantity module.
+
+
+
+Step 1 - Dominate Torque and Quantity
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As explained the highest priority is to get the control of the torque by means of make a consistent convergence of the 4 parameters:
+
+#. the target torque
+
+#. the Real torque
+
+#. the target air flow
+
+#. the real air flow
+
+|qairs_060|
 
 .. tip::
 
-    The symbols ``asQahMapSD``  and ``asQahPreSD`` are calculated every TDC and can be fixed by means of :guilabel:`afQAH_MAP_SD`  and :guilabel:`afQAH_PRE_SD` respectively fix calibration symbols.
+    The figure above shows the logical / physical connections between the four parameters and the two concerning calibration tables.
 
-    Referring to the general Speed Density equation is possible to find hereby the calibration instructions to get and accurate calculation of the value.
+    The Target torque is a symbol called ``esCmuAirLamAdTst`` (coming from torque manager strategy). It must be compared with the measure of the torque available on the testing rig / dyno display. The two value must be equal. In case they are not equal, so following the False arrow , keeping the ``esCmuAirLamAdTst`` stable, change the value of air demand ``esQAir_Request`` editing the table :guilabel:`etCMU2QAIR_OBJ` at the most fitting breakpoint.
 
-    .. note:: **The accuracy of Speed Density estimation**
+    At the same time verify that the air demand that is also the target Air Flow ``esQAir_Request`` is equal to **ReferenceAir** ( abbreviation *RefAir* ) ( in case using the debimeter connected to ECM is ``zsQAirDebim`` symbol). If they are not equal , so following the second False arrow , keeping the ``esQAir_Request`` stable, change the value of throttle opening ``hsPobj_Thr_Tst`` that soon become ``hsThrotRefPerc`` editing the table :guilabel:`htPOBJ_CARAT_THR` at the most fitting breakpoint.
 
-        Nevertheless the calculation chain of speed density has a numerical accuracy much higher, we define the **accuracy of the calibration** as the percentage deviation between the estimated value and of Air Mass Flow and the measured value. By avoiding going into the specious argument of the accuracy of the measurement of the air flow rate which depends on the system used, and therefore assuming that the measured air flow rate is undoubtedly the reference flow rate ( **ReferenceAir** ), we can say that the accuracy of the estimate of the flow rate of the air by calculating the Speed Density (SD) is equal to :math:`\small Accuracy_{SD}\ =\ \frac{ asQahSpeedDensity - ReferenceAir } {ReferenceAir}\ *\ 100`.
+    While the two mentioned tables are edited changed in real torque and real Air Flow are expected. The STEP 1 process for the actual working point can be considered successfully terminated when the two comparison are both satisfied. Usually in few iterations the values will converge.
 
-        Considering that in a normal calibration procedure of a generic engine, we operate on a prototype engine constructed in such a way as to represent the sample with all the tolerances of the components at the center band value and that therefore the subsequent production phase will be distributed evenly around it, we can consider the following tolerance limits in the calibration of the speed density function:
+    .. warning::
 
-        - **Prototype** -> tolerance allowed +/- 5%
+        **WARNINGS AND SUGGESTIONS**
 
-        - **Pre-series sample** -> allowed tolerance +/- 7.5%
+        **THROTTLE BODY CHARACTERISTICS SHAPE**
 
-        - **Standard production sample** -> tolerance allowed +/- 10%
+        Be sure that ``hsPobj_Thr_Tst`` is equal to ``hsThrotRefPerc``. If there are differences it may be due to some calibration of the throttle management that saturates the final throttle opening target. See specific chapters About the Throttle Management.
 
-        .. warning::
+        .. TODO: Chapter for Throttle Management TDB and linked
 
-            In case during :term:`COP` checks the tolerance goes out from the limits, consider to review the calibration in order to reset the deviations. If the tolerances cannot be accomplished by the production process, consider to review some engine part or some procedure of the process. In any case the HDS system can recover by means of the closed loop AFR control and self adaptation up to a 20% deviation. But during the preliminary phases when the self adaptation is still converging to final value some lack of performances or emission control may be found.
+        |qairs_070|
+
+        The surface of :guilabel:`htPOBJ_CARAT_THR` table must be continuously growing monotone f(``hsBeta`` , Volumetric Flow). The edit must be done always respecting this rule. The risk in the contrary is to have unstable control of the throttle position.
+
+        **THROTTLE BODY CHARACTERISTICS: THE hsBeta ESTIMATION**
+
+        The symbol ``hsBeta`` is an entry for interpolate the throttle opening ``hsPobj_Thr_Tst`` that allows the requested air flow rate.  Take care of the value of ``hsBeta``: it must be coherent in steady state with the ratio of measured ``zsMap`` and ``zsPBoost``. In other words the pressure used to calculate the ``hsBeta`` parameter is called ``hsPcollReqDefTmp`` visible as symbol as ``hsPcollReqDef``: since it has to move the throttle to the opening for the target flow, it is calculated using a simplified inverse speed density model applied to the target flow ``hsQAir_Request`` . So, shortly, the ``hsPcollReqDef`` value in steady state must be as close as possible to ``zsMap``. Take care especially that ``hsPcollReqDef`` is not exceeding ``zsMap`` otherwise the saturation di value 1 (physically meaning that the Intake Manifold Pressure cannot axceed the Boost pressure) is rached too early and the throttle model may become inconsistent at high opening.   The convergence process especially at the very beginning of the calibration task must be applied also to this principle. See topic `The Real Air Flow or The Throttle Model`_ where is explained how to calibrate this sub-model.
+
+        For any eventuality, a series of cases that could occur during the calibration of the feedforward model of the throttle upstream / downstream pressure ratio called ``hsBeta`` are reported below.
+
+        |qairs_080_1|
+
+        In above figure 1 is reported an acceptable calibration of parameters for the calculation of ``hsBeta`` . In the chart ``hsPcollReqDef`` follows (fits) quite accurately the ``zsMap``. The blue continuous line is the resulting  ``hsBeta``: it reaches the saturation value of 1.0 only when both ``hsPcollReqDef`` and ``zsMap`` reach the value of the ``zsPBoost`` (so physically coherent ratio of 1 within the  downstream / upstream pressures).
+
+        |qairs_080_2|
+
+        In above figure 2 is reported a not acceptable calibration of parameters for the calculation of ``hsBeta`` . In the chart ``hsPcollReqDef`` is close  the ``zsMap`` only at low pressure values while in the high side is overestimated. The resulting  ``hsBeta`` reaches the saturation value of 1.0 too early when  ``zsMap`` is far from the ``zsPBoost`` . In this case the gain of ``hsPcollReqDef`` is too big: adjust :guilabel:`hsGAIN_NCYL_VCC` calibration.
+
+        |qairs_080_3|
+
+        In above figure 3 is reported a not acceptable calibration of parameters for the calculation of ``hsBeta`` . In the chart ``hsPcollReqDef`` is always far of the same gap from ``zsMap`` but parallel to this last. The resulting  ``hsBeta`` reaches the saturation value of 1.0 too early when  ``zsMap`` is far from the ``zsPBoost`` . In this case the gain of ``hsPcollReqDef`` is good but there is an offset not correct: adjust the EGR Offset Model calibration.
+
+        *EGR Offset* is calculated as follow:
+
+        .. math::
+
+            \small Offset_{EGR}\ =\ \frac{ \max{(\ zsPAtm,\ asPsca\ )}}{asRappComp}
+
+        where:
+
+            * ``zsPAtm`` is the measured atmospheric pressure in [mbar]
+
+            * ``asPsca`` is the exhaust absolute pressure in [mbar] interpolated in :guilabel:`atPRE_SCARICO` f( ``bsRPM`` , ``zsMap`` ).
+
+            * ``asRappComp`` is equal to :guilabel:`asRAPP_COMPRES` calibration symbol representing the geometric compression ratio of the engine.
+
+        *EGR Offset* can be fixed with the fix calibration symbol :guilabel:`hfOFF_P_EGR`
+
+        |qairs_080_4|
+
+         In above figure 4 is reported a not acceptable calibration of parameters for the calculation of ``hsBeta`` . In the chart ``hsPcollReqDef`` is crossing  the ``zsMap`` only at middle pressure values while in the high side is underestimated. The resulting  ``hsBeta`` never reaches the saturation value of 1.0 never when ``zsMap`` is same like ``zsPBoost`` . In this case the gain of ``hsPcollReqDef`` is too low: adjust :guilabel:`hsGAIN_NCYL_VCC` calibration. Also the value of the EGR Offset Model is not perfect but may result acceptable.
+
+
+
+
+
+
+
+Step 2 - Estimate properly and accurately
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once the converging calibration procedure of step 1 is completed for One Engine Working point (or one area including many working points) the consistent control of the torque and related needed Air Quantity is effective. The second step will take care of calibrate the Speed Density and Alpha-N model in such a way that the Estimated value of Air Flow will be consistent with the real Value.
+
+.. tip::
+
+    The general rule is that all of the air flow rate estimated values will have to converge on the measured value of reference air, the **ReferenceAir**.
+
+
+
+
+
+
+
+
+
+
+
 
