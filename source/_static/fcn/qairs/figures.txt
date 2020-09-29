@@ -46,3 +46,7 @@
     :width: 666
     :height: 529
 
+.. |qairs_100| image:: ../_static/fcn/qairs/qairs_100.png
+    :width: 700
+    :height: 642
+

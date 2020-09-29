@@ -689,6 +689,8 @@ As explained the highest priority is to get the control of the torque by means o
 
         **THROTTLE BODY CHARACTERISTICS: THE hsBeta ESTIMATION**
 
+        .. _pressure predictor:
+
         The symbol ``hsBeta`` is an entry for interpolate the throttle opening ``hsPobj_Thr_Tst`` that allows the requested air flow rate.  Take care of the value of ``hsBeta``: it must be coherent in steady state with the ratio of measured ``zsMap`` and ``zsPBoost``. In other words the pressure used to calculate the ``hsBeta`` parameter is called ``hsPcollReqDefTmp`` visible as symbol as ``hsPcollReqDef``: since it has to move the throttle to the opening for the target flow, it is calculated using a simplified inverse speed density model applied to the target flow ``hsQAir_Request`` . So, shortly, the ``hsPcollReqDef`` value in steady state must be as close as possible to ``zsMap``. Take care especially that ``hsPcollReqDef`` is not exceeding ``zsMap`` otherwise the saturation di value 1 (physically meaning that the Intake Manifold Pressure cannot axceed the Boost pressure) is rached too early and the throttle model may become inconsistent at high opening.   The convergence process especially at the very beginning of the calibration task must be applied also to this principle. See topic `The Real Air Flow or The Throttle Model`_ where is explained how to calibrate this sub-model.
 
         For any eventuality, a series of cases that could occur during the calibration of the feedforward model of the throttle upstream / downstream pressure ratio called ``hsBeta`` are reported below.
@@ -740,8 +742,25 @@ Once the converging calibration procedure of step 1 is completed for One Engine 
 
     The general rule is that all of the air flow rate estimated values will have to converge on the measured value of reference air, the **ReferenceAir**.
 
+    We have here many different values of Air Quantity to be monitored:
 
+    #. Alpha-n source based on **actual** throttle position ``asQahAlphaN``
 
+    #. Alpha-n source based on **target** throttle position ``asQahAlphaNPre``
+
+    #. Speed density source based on **measured** intake manifold pressure ( ``zsMap`` ) ``asQahMapSD``
+
+    #. Speed density source based on **target** intake manifold pressure (``asPre``) ``asQahMapSD``
+
+    |qairs_100|
+
+    The scheme in figure above shows the interactions between calibration tables and model to be identified in order to get in steady state the general convergence between all calculated Air Quantities.
+
+    While calibrating is better to stabilize the engine working point and at same time modify all the calibrations in order to get in that point the general convergence.
+
+    .. warning::
+
+        The last Air quantity ``asQahPreSD`` uses the same speed-density model of ``asQahMapSD`` but a different intake pressure source. Hence to have the convergence between them set the highest priority to the ``asQahMapSD`` f(``zsMap``) convergence since it is normally used for calculate the fuel amount and after try to optimize the convergence between ``zsMap`` and ``asPre`` by means of modify the Pressure Predictor Model as per chapter `pressure predictor`_ that is a side value of the throttle ``hsBeta`` estimator model.
 
 
 
