@@ -101,10 +101,6 @@ We will call the single calculation block as a sub-function included in a (funct
 In the following dedicated chapters all testing points will be provided as well as the calibration parameters. Some complex sub-function that needs a dedicated calibration session will be highlighted and linked to the dedicated chapters.
 
 
-
-
-
-
 Torque Request - (Torque Control)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
