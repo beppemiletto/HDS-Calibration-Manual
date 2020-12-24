@@ -1,0 +1,19 @@
+.. |torque_010| image:: ../_static/fcn/torque/torque_010.gif
+    :width: 300
+    :height: 300
+    :target: ../_static/fcn/torque/torque_010.gif
+
+.. |torque_020| image:: ../_static/fcn/torque/torque_020.png
+    :width: 533
+    :height: 298
+
+.. |torque_030| image:: ../_static/fcn/torque/torque_030.png
+    :width: 547
+    :height: 293
+
+.. |torque_040| image:: ../_static/fcn/torque/torque_040.png
+    :width: 700
+    :height: 610
+
+
+

@@ -29,6 +29,11 @@ Glossary
     OEM
         OEM (pronounced as separate letters) is short for original equipment manufacturer, which is a somewhat misleading term used to describe a company that produces and resell to final customer product. Typically used for the vehicle manufacturer. More generally OEMs are manufacturers who resell another company's product under their own name and branding.
 
+    ONE-BOX
+    TWO-BOX
+        In the Engine Control System context the ONE-BOX definition applies to a vehicle system integration where the :term:`ECM` is the Main On Board Computer that take care of receive and manage all the vehicle's (human and on board subsystems) inputs for the performance request to the engine.
+        The TWO-BOX definition applies to a vehicle system integration where the :term:`VCM` is the Main On Board Computer that take care of receive and manage all the vehicle's (human and on board subsystems) inputs for the performance request to the engine. In this case the VCM transmits to ECM the composite request by means of a digital connection (i.e. vehicle CAN bus).
+
     MPI
         Multiple Points Injection (aka Multipoint Injection). Every inlet port of the engine has its own injector (or set of injectors) that delivers the fuel in the intaked air stream.
 
@@ -37,11 +42,16 @@ Glossary
 
     PWM
     PDM
-        `From Wikipedia, the free encyclopedia <https://en.wikipedia.org/wiki/Pulse-width_modulation>`_
+        `From Wikipedia, the free encyclopedia PWM <https://en.wikipedia.org/wiki/Pulse-width_modulation>`_
 
         Pulse-width modulation (PWM), or pulse-duration modulation (PDM), is a method of reducing the average power delivered by an electrical signal, by effectively chopping it up into discrete parts. The average value of voltage (and current) fed to the load is controlled by turning the switch between supply and load on and off at a fast rate. The longer the switch is on compared to the off periods, the higher the total power supplied to the load. Along with maximum power point tracking (MPPT), it is one of the primary methods of reducing the output of solar panels to that which can be utilized by a battery.[1] PWM is particularly suited for running inertial loads such as motors, which are not as easily affected by this discrete switching, because their inertia causes them to react slowly. The PWM switching frequency has to be high enough not to affect the load, which is to say that the resultant waveform perceived by the load must be as smooth as possible.
 
         The rate (or frequency) at which the power supply must switch can vary greatly depending on load and application. For example, switching has to be done several times a minute in an electric stove; 120 Hz in a lamp dimmer; between a few kilohertz (kHz) and tens of kHz for a motor drive; and well into the tens or hundreds of kHz in audio amplifiers and computer power supplies. The main advantage of PWM is that power loss in the switching devices is very low. When a switch is off there is practically no current, and when it is on and power is being transferred to the load, there is almost no voltage drop across the switch. Power loss, being the product of voltage and current, is thus in both cases close to zero. PWM also works well with digital controls, which, because of their on/off nature, can easily set the needed duty cycle. PWM has also been used in certain communication systems where its duty cycle has been used to convey information over a communications channel.
+
+    PTO
+        `From Wikipedia, the free encyclopedia PTO <https://en.wikipedia.org/wiki/Power_take-off>`_ . A power take-off or power takeoff (PTO) is any of several methods for taking power from a power source, such as a running engine, and transmitting it to an application such as an attached implement or separate machine. Most commonly, it is a splined drive shaft installed on a tractor or truck allowing implements with mating fittings to be powered directly by the engine.
+
+        Semi-permanently mounted power take-offs can also be found on industrial and marine engines. These applications typically use a drive shaft and bolted joint to transmit power to a secondary implement or accessory. In the case of a marine application, such shafts may be used to power fire pumps.
 
     RAM
         Random Access Memory - the volatile memory of the microprocessor of the :term:`ECM`.

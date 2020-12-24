@@ -1616,6 +1616,56 @@ Main conditions
         Low values in :guilabel:`rvENG_RUN_CRK` may lead to missed start of engine. High values may lead to starter mechanical damages.
 
 
+.. *******************************************************************************************************************
+.. *                                                                                                                 *
+.. *                                                                                                                 *
+.. *   VEHICLE FUNCTION OPEN DOOR SAFETY                                                                       *
+.. *                                                                                                                 *
+.. *                                                                                                                 *
+.. *******************************************************************************************************************
+
+.. _doorsopen:
+
+DOOR OPEN - The BUS application safety function
+###############################################
+
+Controls the limitation of the Torque Request when the driver accidentally press the accelerator pedal and passenger doors of the bus are still open.
+
+.. tip::
+
+    The function is automatically enable when :guilabel:`vsAPPL_TYPE` is set to *TE_APPL* (val = 2). Valid values are TF_APPL=1; TE_APPL=2; TM_APPL=3. The default is TE_APPL=2.
+
+    Is possible to force the status of the DOORS OPEN function using the fix :guilabel:`vfDOORS_OPEN_EN` symbol set to 1 for enabling or to 0 for disabling.
+
+    When the function is enabled the the symbol ``vsDoorsOpenEn`` goes to 1.
+
+    **Wired Door Open Switch**
+
+    The DOOR OPEN switch can be directly wired to ECU. In this case refer to Application Specific Electrical Schematics to find the correct ECU pin to be connected to the switch output.
+
+    Refer to digital_inputs_list_ table to find te configuration parameters to have the signal available and working with the expected logic: ``zsDoorsOpen`` must be 1 (True) when the Doors are physically open on the vehicle.
+
+    .. warning::
+
+        The status of the output signal ``vsDoorsOpen`` can be affected by the status of the Accelerator Pedal Idle Switch, if present in the configuration.  Be sure that in case the Idle Switch is not present in the current configuration, the calibration :guilabel:`zsAV_IDLE_ACC` is set to 0 (Not Available) and as a consequence ``zsAvIdleAcc`` remains always to 0 and also ``zsIdleAccR`` remains always equal to 3 (not available). By means of this precautions is possible to avoid any interference on the Doors Open Strategy.
+
+        In case the idle switch is present in the configuration and is found faulty by its own diagnostic (``zsIdleAccR`` = 2), it can operates permanent limitation of the torque for door open.
+
+    :guilabel:`vsLIM_PERF_PDL_DO` u.m. [%] is the calibration value of limit of the maximum torque request when the request comes from accelerator pedal.
+
+    With the calibration variable :guilabel:`vsDOOR_RACC_LIN_EN` (Enable = 1) it is possible to enable a gradient of connection between the torque request coming from the accelerator pedal with the maximum one allowed for the DOORS OPEN condition. Depending on whether the `` vsDoorsOpen '' condition passes from active (1 - doors open) to inactive (0 - doors closed) or vice versa, the steps :guilabel:`vsSTEP_RACC_DOOR_CL` and :guilabel:`vsSTEP_RACC_DOOR_OP` respectively. The step is intended as a portion of 10.000 units applied every 4 [ms] concurring to reach the value 10000. For example calibrating to 250 the step when doors are closed, it means that the torque request filter the "switch" between limited to unlimited in
+
+    .. math:: \small Time_{slope}\ \frac{10000}{250}\ *\ 0.004\ =\ 0.16\ [s]
+
+
+
+
+
+
+
+
+
+
 
 
 
