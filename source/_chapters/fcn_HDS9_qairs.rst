@@ -221,6 +221,8 @@ Air Quantity Target
 
     If the measured ``zsQAirDebim`` is available as **ReferenceAir** can be useful to use the selector :guilabel:`asAIR_SENS_PRI` set to 3 so helping the fuel control since the measured value of Air Quantity s used for controlling the fuel amount delivered by injectors.
 
+.. _hsBeta:
+
 The Real Air Flow or The Throttle Model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -233,6 +235,7 @@ The second model in the top-down hierarchical order is the throttle one. The cal
     The model is represented essentially by the calibration table :guilabel:`htPOBJ_CARAT_THR` f( ``hsBeta`` , *volumetric target air flow* ) which output ``hsPobjCaratThr`` is the target percentage opening of the throttle [%].
 
     |qairs_050|
+
 
     The table inputs are ``hsBeta`` , which represents from a physical point of view the relationship between the air pressures downstream and upstream of the throttle valve, and a value that is not available in the symbol library of HDS,  which represents the volume of air flow that you want to pass by the throttle valve.
 
@@ -248,11 +251,11 @@ The second model in the top-down hierarchical order is the throttle one. The cal
 
         .. math::
 
-            \small hsPcollReqDef\ =\ { hsGAIN\_NCYL\_VCC\ *\ hsPcollReRefTst }\ +\ { \frac{ \max{(\ zsPAtm,\ asPsca\ )}}{asRappComp}}
+            \small hsPcollReqDef\ =\ { hsGainNcylVcc\ *\ hsPcollReRefTst }\ +\ { \frac{ \max{(\ zsPAtm,\ asPsca\ )}}{asRappComp}}
 
         where:
 
-            * :guilabel:`hsGAIN_NCYL_VCC` is an empirical calibration multiplier factor to be identified in a way that in steady state the resulting ``hsPcollReqDef`` is as much as possible equal to ``zsMap`` .
+            * ``hsGainNcylVcc`` is an empirical calibration multiplier factor to be identified in a way that in steady state the resulting ``hsPcollReqDef`` is as much as possible equal to ``zsMap`` . It is interpolated on :guilabel:`hvGAIN_NCYL_VCC` in f(``bsRPM``).
 
             * ``zsPAtm`` is the measured atmospheric pressure in [mbar]
 
@@ -701,7 +704,7 @@ As explained the highest priority is to get the control of the torque by means o
 
         |qairs_080_2|
 
-        In above figure 2 is reported a not acceptable calibration of parameters for the calculation of ``hsBeta`` . In the chart ``hsPcollReqDef`` is close  the ``zsMap`` only at low pressure values while in the high side is overestimated. The resulting  ``hsBeta`` reaches the saturation value of 1.0 too early when  ``zsMap`` is far from the ``zsPBoost`` . In this case the gain of ``hsPcollReqDef`` is too big: adjust :guilabel:`hsGAIN_NCYL_VCC` calibration.
+        In above figure 2 is reported a not acceptable calibration of parameters for the calculation of ``hsBeta`` . In the chart ``hsPcollReqDef`` is close  the ``zsMap`` only at low pressure values while in the high side is overestimated. The resulting  ``hsBeta`` reaches the saturation value of 1.0 too early when  ``zsMap`` is far from the ``zsPBoost`` . In this case the gain of ``hsPcollReqDef`` is too big: adjust :guilabel:`hvGAIN_NCYL_VCC` calibration.
 
         |qairs_080_3|
 
@@ -725,7 +728,7 @@ As explained the highest priority is to get the control of the torque by means o
 
         |qairs_080_4|
 
-         In above figure 4 is reported a not acceptable calibration of parameters for the calculation of ``hsBeta`` . In the chart ``hsPcollReqDef`` is crossing  the ``zsMap`` only at middle pressure values while in the high side is underestimated. The resulting  ``hsBeta`` never reaches the saturation value of 1.0 never when ``zsMap`` is same like ``zsPBoost`` . In this case the gain of ``hsPcollReqDef`` is too low: adjust :guilabel:`hsGAIN_NCYL_VCC` calibration. Also the value of the EGR Offset Model is not perfect but may result acceptable.
+         In above figure 4 is reported a not acceptable calibration of parameters for the calculation of ``hsBeta`` . In the chart ``hsPcollReqDef`` is crossing  the ``zsMap`` only at middle pressure values while in the high side is underestimated. The resulting  ``hsBeta`` never reaches the saturation value of 1.0 never when ``zsMap`` is same like ``zsPBoost`` . In this case the gain of ``hsPcollReqDef`` is too low: adjust :guilabel:`hvGAIN_NCYL_VCC` calibration. Also the value of the EGR Offset Model is not perfect but may result acceptable.
 
 
 

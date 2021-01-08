@@ -1,0 +1,18 @@
+.. |boost_010| image:: ../_static/fcn/boost/boost_010.png
+    :width: 320
+    :height: 250
+    :target: https://en.wikipedia.org/wiki/Turbocharger
+
+.. |boost_020| image:: ../_static/fcn/boost/boost_020.png
+    :width: 700
+    :height: 388
+
+.. |boost_030| image:: ../_static/fcn/boost/boost_030.png
+    :width: 700
+    :height: 601
+    :target: ../_static/fcn/boost/boost_030_hr.png
+
+.. |boost_040| image:: ../_static/fcn/boost/boost_040.png
+    :width: 700
+    :height: 507
+    :target: ../_static/fcn/boost/boost_040_hr.png
