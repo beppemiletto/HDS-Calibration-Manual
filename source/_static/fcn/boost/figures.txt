@@ -16,3 +16,7 @@
     :width: 700
     :height: 507
     :target: ../_static/fcn/boost/boost_040_hr.png
+
+.. |boost_050| image:: ../_static/fcn/boost/boost_050.png
+    :width: 700
+    :height: 589

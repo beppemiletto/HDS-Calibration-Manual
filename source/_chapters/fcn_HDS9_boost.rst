@@ -307,6 +307,8 @@ Boost pressure controller PID calibration
 
 The boost pressure controller features a standard PID based on boost pressure error as input for P and I terms as well ad a derivative of the error for D term. The calibration of the PID gains can be done on tables that allow the gain scheduling feature based on the target compression ratio of compressor and the controller error.
 
+
+
 .. tip::
 
     The error of the controller ``tsErrClipped`` is calculated as:
@@ -327,16 +329,119 @@ The boost pressure controller features a standard PID based on boost pressure er
 
     After a system saturation between the values -2000 / + 2000 [mbar], ``tsBoostCtrlErr`` becomes ``tsErrClipped``
 
-    The derivative error ``tsDerErrPboost`` [:math:`\tiny [\frac{mbar}{s}]`] is updated every 50 [ms] based on ``tsErr`` , extrapolated to 1000 [ms] by a 20 gain and averaged in a reason of 2.
+    The derivative error ``tsDerErrPboost`` [:math:`\tiny \frac{mbar}{s}`] is updated every 50 [ms] based on ``tsErr`` , extrapolated to 1000 [ms] by a 20 gain and averaged in a reason of 2.
 
     |boost_040|
 
     In the picture an example of the behaviour of the boost pressure controller errors.
 
+.. tip::
 
+    **The total closed loop contribute** is calculated as follows:
+
+    .. math:: \small tsCLDirect\ =\  tsKpDirect\ +\ tsKiDirect\ +\ tsKdDirect
+
+    where:
+
+        * ``tsKpDirect`` is the KP - the proportional contribute - that is calculated every 50 [ms] as :math:`\small \ tsKpDirect\ =\ tsErrClipped\ *\ tsKpWgCtrl`
+
+            Where:
+
+                * ``tsErrClipped`` is the actual error (target - measured boost pressure) clipped at -2000 / + 2000 [mbar]
+
+                * ``tsKpWgCtrl`` is the **proportional gain** [:math:`\tiny \frac{\%}{mbar}`] interpolated in :guilabel:`ttKP_WG_CTRL` calibration table f(``tsCompression`` , - ``tsErrClipped``)
+
+                .. warning:: The entry in the gain's table of ``tsErrClipped`` is changed of sign. Keep in consideration when calibrating the table.
+
+
+        * ``tsKiDirect`` is the KI - the Integral contribute - that is calculated every 50 [ms] as :math:`\tiny \ tsKiDirect\ =\ tsANTIW\_UPL \le [\ \int (tsErrClipped\ *\ 0.05)\ *\ tsKiWgCtrl\ ] \le tsANTIW\_UPH`
+
+            Where:
+
+                * ``tsErrClipped`` is the actual error (target - measured boost pressure) clipped at -2000 / + 2000 [mbar]
+
+                * ``tsKiWgCtrl`` is the **integral gain** [:math:`\tiny \frac{\%}{mbar}`] interpolated in :guilabel:`ttKI_WG_CTRL` calibration table f(``tsCompression`` , - ``tsErrClipped``)
+
+                .. warning:: The entry in the gain's table of ``tsErrClipped`` is changed of sign. Keep in consideration when calibrating the table.
+
+                * the constant 0.05 [s] is the :math:`dT` term of the integral
+
+                * :guilabel:`tsANTIW_UPL` is the minimum value of the integral term (lower saturation aka lower anti windup limit)
+
+                * :guilabel:`tsANTIW_UPH` is the maximum value of the integral term (higher saturation aka higher anti windup limit)
+
+                .. note:: ``tsKiDirect`` is reset to 0 when ``tsBoostCl`` change status. In other words, when the closed loop start / restart, the integral term is reset to null.
+
+        * ``tsKdDirect`` is the KD - the Derivative contribute - that is calculated every 50 [ms] as :math:`\tiny \ tsKdDirect\ =\ tsSAT\_KDERL \le \ ( \ tsDerErrPboost\ *\ tsKdWgCtrl\ ) \le tsSAT\_KDERH`
+
+            Where:
+
+                * ``tsDerErrPboost`` is the actual derivative of error.
+
+                * ``tsKdWgCtrl`` is the **derivative gain** [:math:`\tiny \frac{\% * s}{mbar}`] interpolated in :guilabel:`ttKD_WG_CTRL` calibration table f(``tsCompression`` , - ``tsErrClipped``)
+
+                .. warning:: The entry in the gain's table of ``tsErrClipped`` is changed of sign. Keep in consideration when calibrating the table.
+
+                * :guilabel:`tsSAT_KDERL` is the minimum value of the derivative term (lower saturation)
+
+                * :guilabel:`tsSAT_KDERH` is the maximum value of the derivative term (higher saturation)
+
+                .. note:: ``tsKdDirect`` is reset to 0 when ``tsBoostCl`` change status. In other words, when the closed loop start / restart, the derivative term is reset to null.
+
+
+At the end a further conditional block transfer the result of the sum  of ``tsCLDirect`` and  ``tsFfwWg`` to ``tsPercWGDirect`` only if the status of ``tsBoostCl`` is True (1) otherwise 0 is passed.
 
 Waste Gate Actuator Management Calibration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``bsWGTDuty`` [%] is the last parameter of the calculation chain before to be applied to the actuation Hardware.
+
+.. tip::
+
+    The frequency of the duty cycle of the command signal can be set by means of the calibration  :guilabel:`tsWG_FREQ` [Hz].
+
+    The parameter ``tsPercWGDirect`` is saturated lower and higher side respectively by:
+
+        * ``tsSogliaInfWg`` [%] interpolated from  :guilabel:`tvSOGLIA_INF_WG` calibration table f(``bsRPM``)
+
+        * ``tsSogliaSupWg`` [%] interpolated from  :guilabel:`tvSOGLIA_SUP_WG` calibration table f(``bsRPM``)
+
+    A next lower saturation that can be defined as *"Minimum Actuation for Boost Ready"* is given by :guilabel:`tsBOOST_READY` [%] that is active when:
+
+        1. the recovery dsR29 is not active
+
+            **AND**
+
+        2. actual engine speed ``bsRPM`` is lower than ``esP5DownEndSpeed``
+
+            **AND**
+
+        3. ``esSpeed_Ctrl_Mod`` is True (1)
+
+                **OR**
+
+            ``isEnableIdleCtrl`` is True (1) **AND** ``bsRPM`` is less than or equal (``isRpmObtStat`` +   :guilabel:`tsDELT_UNDER_IDL` calibration offset)
+
+    After these limitations / saturation the value of the requested duty actuation is called ``tsWGDutyPreR`` and can be fixed by means of :guilabel:`tfWG_DUTY_PRE_R` calibration fix.
+
+    ``tsWGDutyPreR`` enter a Recovery Function that is activated if dsR24 is active. In this case the ``tsWGDutyPreR`` is substituted by a calibration value :guilabel:`dsWGT_DUTYREC`, typically set to 0 (no actuation). The result of this function can be monitored by means of ``dsWGTDutyPostR`` parameter.
+
+    Finally, if ``dsLoadEn`` flag is True, the resulting Duty cycle calculated by the boost control module is ``dsWGDuty`` = ``tsWGDuty`` that can be fixed by means of :guilabel:`tfWG_DUTY` calibration fix.
+
+    **Actuator Model Characteristic Inversion** - the last function that need a calibration is the Duty Cycle Optional Inversion. Normally the Turbocharger control is made in a safe way, where the Duty Cycle 0 corresponding to NO ACTION is with Waste Gate completely open, lowest boost pressure, minimum turbocharger load and speed. While the Duty cycle increases, the waste gate start closing more and more, incresing the boost performances. In case of failure of the control system, no action establish the safest condition like to impose 0 duty cycle. In case the actuator is a non standard one, where the increasing duty cycle increase the Waste Gate opening, the HDS9 boost control strategy features a module of Duty Cycle inversion.  The calibration flag :guilabel:`tsWG_DUTY_INV` set to 0 (default) makes ``bsWGTDuty`` = ``tsWGDuty`` while  :guilabel:`tsWG_DUTY_INV` set to 1 (dedicated calibration) makes ``bsWGTDuty`` =  100 - ``tsWGDuty``.
+
+    |boost_050|
+
+    ``bsWGTDuty`` is the last application software parameter sent to low level driver of the boost pressure control actuator (typically a three way solenoid valve) in form of power actuation.
+
+
+
+
+
+
+
+
+
+
+
 
